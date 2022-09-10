@@ -7,7 +7,6 @@ public class Series {
     double accuracy;
 
     public Series(double x, double accuracy) {
-
         this.x = x;
         this.accuracy = accuracy;
     }
@@ -26,11 +25,14 @@ public class Series {
     }
 
     public static void main(String[] args) {
+        java.lang.System.err.print("Enter number, |number| <= 1 and accuracy: ");
         Scanner scanner = new Scanner(System.in);
-        java.lang.System.err.print("Enter number, |number| <= 1:");
+        scanner = new Scanner(scanner.nextLine());
         double x = scanner.nextDouble();
-        java.lang.System.err.print("Enter accuracy:");
         double accuracy = scanner.nextDouble();
+        if (scanner.hasNext()) {
+            throw new IllegalArgumentException("only 2 parameters");
+        }
         Series series = new Series(x, accuracy);
         java.lang.System.err.println(series.calculateSeries());
     }
