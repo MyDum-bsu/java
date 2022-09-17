@@ -31,7 +31,7 @@ public class Series {
         double x = scanner.nextDouble();
         double accuracy = scanner.nextDouble();
         if (scanner.hasNext()) {
-            throw new IllegalArgumentException("only 2 parameters");
+            throw new IllegalArgumentException("expected only 2 parameters");
         }
         Series series = new Series(x, accuracy);
         java.lang.System.err.println(series.calculateSeries());
