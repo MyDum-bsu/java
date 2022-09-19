@@ -8,7 +8,6 @@ class Task7Test {
     @Test
     void shouldReturnEmptyString() {
         assertEquals("", Task7.deleteSinglesAndSpaces(" d i m a "));
-        //assertEquals("", Task7.deleteSinglesAndSpaces("         "));
     }
 
     @Test
@@ -25,9 +24,16 @@ class Task7Test {
     }
 
     @Test
-    void shouldThrowEmptyStringException() throws EmptyStringException {
+    void shouldThrowEmptyStringException1() throws EmptyStringException {
         EmptyStringException exception = assertThrows(EmptyStringException.class, () -> {
             Task7.deleteSinglesAndSpaces("");
+        });
+        assertTrue(exception.getMessage().contains("empty string"));
+    }
+
+    void shouldThrowEmptyStringException2() throws EmptyStringException {
+        EmptyStringException exception = assertThrows(EmptyStringException.class, () -> {
+            Task7.deleteSinglesAndSpaces("       ");
         });
         assertTrue(exception.getMessage().contains("empty string"));
     }
