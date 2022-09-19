@@ -1,10 +1,23 @@
-package lab2;
+package lab2_kndr;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Task15 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        createArrayListPascalTriangle(n).forEach(System.err::println);
+        //System.err.println(createArrayListPascalTriangle(n)); это вместо предыдущей строчки
+        Arrays.stream(createArrayPascalTriangle(n)).forEach(row -> System.err.println(Arrays.toString(row))); // расскажите, пожалуйста, как именно работает
+//        Main.runner();
+
+    }
+
+    public static void runner() {
+        //....
+    }
     public static ArrayList<ArrayList<Integer>> createArrayListPascalTriangle(int n) {
         ArrayList<ArrayList<Integer>> triangle = new ArrayList<>();
         ArrayList<Integer> previousRow = new ArrayList<>();
@@ -48,7 +61,6 @@ public class Task15 {
                         currentRow[j] = previousRow[index - 1] + previousRow[index];
                         index++;
                     }
-
                 }
             }
             triangle[i] = currentRow;
@@ -57,11 +69,5 @@ public class Task15 {
         return triangle;
     }
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        createArrayListPascalTriangle(n).forEach(System.err::println);
-        //System.err.println(createArrayListPascalTriangle(n)); это вместо предыдущей строчки
-        Arrays.stream(createArrayPascalTriangle(n)).forEach(row -> System.err.println(Arrays.toString(row))); // расскажите, пожалуйста, как именно работает
-    }
+
 }

@@ -1,4 +1,4 @@
-package lab2.codecheck;
+package lab2_kndr.codecheck;
 
 public class Grades
 {
@@ -19,5 +19,7 @@ public class Grades
         for(int i = 0; i < test1.length; ++i)
             averageMarks[i] = (test1[i] + test2[i]) /2;
         return averageMarks;
+
+
     }
 }

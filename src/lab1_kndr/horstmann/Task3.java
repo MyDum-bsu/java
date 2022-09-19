@@ -1,20 +1,15 @@
-package lab1.horstmann;
+package lab1_kndr.horstmann;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Task3 {
     public static int maxOfThree(int first, int second, int third) {
         int answer;
         if (first >= second) {
-            answer = first;
-            if (third >= first) {
-                answer = third;
-            }
+            answer = Math.max(third, first);
         } else {
-            answer = second;
-            if (third >= second) {
-                answer = third;
-            }
+            answer = Math.max(third, second);
         }
         return answer;
     }

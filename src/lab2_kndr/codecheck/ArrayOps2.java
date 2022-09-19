@@ -1,4 +1,4 @@
-package lab2.codecheck;
+package lab2_kndr.codecheck;
 
 public class ArrayOps2 {
     /**
