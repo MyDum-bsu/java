@@ -6,36 +6,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Task7Test {
     @Test
-    void shouldReturnEmptyString() {
+    void Should_ReturnEmptyString_When_WordsLengthIsOne() {
         assertEquals("", Task7.deleteSinglesAndSpaces(" d i m a "));
     }
 
     @Test
-    void shouldReturnSymbols() {
+    void Should_ReturnSymbols_When_NoLetters() {
         assertEquals(". : ^ [ ] { } ( ) * & ? ^ % $ # @ ! | / \\", Task7.deleteSinglesAndSpaces(" . : a ^ [ ] { } ( ) * & ? ^ % $ # @ ! | / \\ "));
     }
 
     @Test
-    void shouldReturnSameString() {
+    void Should_ReturnSameString_When_WordsLengthMoreThanTwo() {
         assertEquals("Standing by my window, breathing summer breeze",
-                Task7.deleteSinglesAndSpaces("Standing by my window, breathing summer breeze"));
+                Task7.deleteSinglesAndSpaces(" Standing by my window, breathing summer breeze"));
         assertEquals("Took us by the hands and up we go",
                 Task7.deleteSinglesAndSpaces(" Took us by the hands and up we go "));
     }
 
     @Test
-    void shouldThrowEmptyStringException1() throws EmptyStringException {
+    void Should_ThrowEmptyStringException_When_StringIsEmpty() throws EmptyStringException {
         EmptyStringException exception = assertThrows(EmptyStringException.class, () -> {
             Task7.deleteSinglesAndSpaces("");
         });
-        assertTrue(exception.getMessage().contains("empty string"));
+        assertTrue(exception.getMessage().contains("The source line should not be empty"));
     }
-
-    void shouldThrowEmptyStringException2() throws EmptyStringException {
+    @Test
+    void Should_ThrowEmptyStringException_When_StringOfSpaces() throws EmptyStringException {
         EmptyStringException exception = assertThrows(EmptyStringException.class, () -> {
             Task7.deleteSinglesAndSpaces("       ");
         });
-        assertTrue(exception.getMessage().contains("empty string"));
+        assertTrue(exception.getMessage().contains("The source line should not be empty"));
     }
 
 }

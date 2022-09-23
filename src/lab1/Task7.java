@@ -5,26 +5,29 @@ import java.util.StringTokenizer;
 public class Task7 {
     public static String deleteSinglesAndSpaces(String string) throws EmptyStringException {
         if (string.trim().isEmpty()) {
-            throw new EmptyStringException("empty string");
+            throw new EmptyStringException("The source line should not be empty");
         }
+
         StringTokenizer str = new StringTokenizer(string, " ", false);
-        StringBuilder edited = new StringBuilder();
+        StringBuilder editedString = new StringBuilder();
+        StringBuilder token;
+        boolean isAlpha;
 
         while (str.hasMoreTokens()) {
-            StringBuilder token = new StringBuilder(str.nextToken());
-            boolean isAlpha = token.chars().allMatch(Character::isAlphabetic);
+            token = new StringBuilder(str.nextToken());
+            isAlpha = token.chars().allMatch(Character::isAlphabetic);
             if (token.length() != 1 || !isAlpha) {
-                edited.append(token).append(" ");
+                editedString.append(token).append(" ");
             }
         }
-        return edited.toString().trim();
+        return editedString.toString().trim();
     }
 
     public static void run(String str) {
-            try {
-                System.err.println(deleteSinglesAndSpaces(str));
-            } catch (EmptyStringException e) {
-                e.printStackTrace();
-            }
+        try {
+            System.out.println(deleteSinglesAndSpaces(str));
+        } catch (EmptyStringException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
     }
 }
