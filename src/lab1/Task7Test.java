@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Task7Test {
     @Test
     void Should_ReturnEmptyString_When_WordsLengthIsOne() {
-        assertEquals("", Task7.deleteSinglesAndSpaces(" d i m a "));
+        assertEquals("dd", Task7.deleteSinglesAndSpaces("      dd     i    m a     "));
     }
 
     @Test

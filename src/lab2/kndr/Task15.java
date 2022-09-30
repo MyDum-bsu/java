@@ -1,4 +1,4 @@
-package lab2_kndr;
+package lab2.kndr;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,11 +43,10 @@ public class Task15 {
         }
         return triangle;
     }
-
     public static int[][] createArrayPascalTriangle(int n) {
         int[][] triangle = new int[n][];
         int[] previousRow = new int[0];
-        int[] currentRow = new int[0];
+        int[] currentRow;
         for (int i = 0; i < n; i++) {
             if (i == 0) {
                 currentRow = new int[]{1};
@@ -68,6 +67,4 @@ public class Task15 {
         }
         return triangle;
     }
-
-
 }

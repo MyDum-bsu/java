@@ -1,6 +1,5 @@
-package lab1_kndr.horstmann;
+package lab1.kndr.horstmann;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Task3 {

@@ -1,4 +1,4 @@
-package lab1_kndr;
+package lab1.kndr;
 
 import java.util.Scanner;
 

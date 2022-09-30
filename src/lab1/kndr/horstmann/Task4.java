@@ -1,4 +1,4 @@
-package lab1_kndr.horstmann;
+package lab1.kndr.horstmann;
 
 public class Task4 {
     public static double maxDouble() {

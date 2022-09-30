@@ -1,4 +1,4 @@
-package lab1_kndr.horstmann;
+package lab1.kndr.horstmann;
 
 import java.math.BigInteger;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package lab2_kndr;
+package lab2.kndr;
 
 import java.util.Arrays;
 import java.util.ArrayList;
