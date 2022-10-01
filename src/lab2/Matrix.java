@@ -163,7 +163,12 @@ public class Matrix {
         }
         m.printExtendedMatrix(B);
         System.out.println();
-        double[] result = solveSLAE(m, B);
-        System.out.println(Arrays.toString(result));
+        try {
+            double[] result = solveSLAE(m, B);
+            System.out.println(Arrays.toString(result));
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getLocalizedMessage());
+            System.exit(2);
+        }
     }
 }

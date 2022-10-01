@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) {
-        Path path = Paths.get("src/lab2/A.txt");
+        Path path = Paths.get("src/lab2/files/A.txt");
         Matrix.run(path);
     }
 
@@ -17,4 +17,3 @@ public class Main {
         return s.toString();
     }
 }
-
