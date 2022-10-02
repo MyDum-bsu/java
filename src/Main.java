@@ -1,19 +1,15 @@
-import lab2.Matrix;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import lab3.BinarySearchTree;
+import lab3.Student;
 
 public class Main {
     public static void main(String[] args) {
-        Path path = Paths.get("src/lab2/files/A.txt");
-        Matrix.run(path);
-    }
+        BinarySearchTree<Student> tree = new BinarySearchTree<>(new Student(1,"SVY"));
+        tree.insert(new Student(2, "MDI"));
+        tree.insert(new Student(2,"GAA"));
+        tree.insert(new Student(3,"AYS"));
+        tree.inorderTreeWalk();
+        System.out.println(tree.maximum());
+        System.out.println(tree.minimum());
 
-    private static String terminalInputString(String[] args) {
-        StringBuilder s = new StringBuilder();
-        for (String arg : args) {
-            s.append(arg).append(" ");
-        }
-        return s.toString();
     }
 }

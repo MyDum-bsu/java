@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 class MatrixTest {
 
     @Test
@@ -16,7 +15,7 @@ class MatrixTest {
         double[] B = new double[]{1, 1, 1};
         Matrix A = new Matrix(Paths.get("src/lab2/files/Test1.txt"));
         double[] result = new double[]{1, 1, 1};
-        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveSLAE(A, B)));
+        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveLinearSystem(A, B)));
     }
 
     @Test
@@ -24,7 +23,7 @@ class MatrixTest {
         double[] B = new double[]{1, 1, 1};
         Matrix A = new Matrix(Paths.get("src/lab2/files/Test2.txt"));
         double[] result = new double[]{-0.5, 1.5, -0.5};
-        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveSLAE(A, B)));
+        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveLinearSystem(A, B)));
     }
 
     @Test
@@ -32,15 +31,23 @@ class MatrixTest {
         double[] B = new double[]{1, 1, 1};
         Matrix A = new Matrix(Paths.get("src/lab2/files/Test3.txt"));
         double[] result = new double[]{-0.5, 1.5, -0.5};
-        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveSLAE(A, B)));
+        assertEquals(Arrays.toString(result), Arrays.toString(Matrix.solveLinearSystem(A, B)));
     }
 
     @Test
-    void Should_throwWrongSize() { // nice name for test!
-        NonSquareMatrixException exception = assertThrows(NonSquareMatrixException.class, () -> {
+    void Should_throwTooManyElements() { // nice name for test!
+        TooMuchElementsException exception = assertThrows(TooMuchElementsException.class, () -> {
             new Matrix(Paths.get("src/lab2/files/Test4.txt"));
         });
-        assertTrue(exception.getMessage().contains("Wrong matrix size"));
+        assertTrue(exception.getMessage().contains("Too many elements"));
+    }
+
+    @Test
+    void Should_throwNotEnoughElements() { // nice name for test!
+        NotEnoughElementsException exception = assertThrows(NotEnoughElementsException.class, () -> {
+            new Matrix(Paths.get("src/lab2/files/Test7.txt"));
+        });
+        assertTrue(exception.getMessage().contains("Need more elements"));
     }
 
     @Test
@@ -64,7 +71,7 @@ class MatrixTest {
         double[] B = new double[]{1, 1, 1};
         Matrix A = new Matrix(Paths.get("src/lab2/files/Test8.txt"));
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            Matrix.solveSLAE(A, B);
+            Matrix.solveLinearSystem(A, B);
         });
         assertTrue(exception.getMessage().contains("Matrix should be squared"));
     }
@@ -74,8 +81,16 @@ class MatrixTest {
         double[] B = new double[]{1, 1, 1};
         Matrix A = new Matrix(Paths.get("src/lab2/files/Test9.txt"));
         IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> {
-            Matrix.solveSLAE(A, B);
+            Matrix.solveLinearSystem(A, B);
         });
         assertTrue(exception.getMessage().contains("Unsolvable system"));
+    }
+
+    @Test
+    void Should_throwTooManyElementsForB() { // nice name for test!
+        TooMuchElementsException exception = assertThrows(TooMuchElementsException.class, () -> {
+            Matrix.readB(Paths.get("src/lab2/files/Test11.txt"), 3);
+        });
+        assertTrue(exception.getMessage().contains("Too many arguments for B"));
     }
 }
