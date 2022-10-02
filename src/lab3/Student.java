@@ -9,15 +9,14 @@ public class Student implements Comparable<Student> {
         this.fio = s;
     }
 
-    @Override
     public int compareTo(Student s) {
         if (course != s.course) {
             return course - s.course;
         }
         return fio.compareTo(s.fio);
     }
-    @Override
+
     public String toString() {
-        return  "course: " + course + " fio: " + fio;
+        return "course: " + course + " fio: " + fio;
     }
 }
