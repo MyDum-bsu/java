@@ -16,4 +16,8 @@ public class Student implements Comparable<Student> {
         }
         return fio.compareTo(s.fio);
     }
+    @Override
+    public String toString() {
+        return  "course: " + course + " fio: " + fio;
+    }
 }

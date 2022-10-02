@@ -12,7 +12,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     private class Node {
-        T key; // ? value
+        T key;
         Node left;
         Node right;
 
@@ -21,7 +21,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
             left = null;
             right = null;
         }
-
     }
 
 
@@ -30,15 +29,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     private void inorderTreeWalk(Node node) {
-        // myTree.lnr(MyTree.root); <- отвратительно
         if (node != null) {
             inorderTreeWalk(node.left);
-            System.out.println(node.key);
+            System.out.println(node.key.toString());
             inorderTreeWalk(node.right);
         }
     }
 
-    public void preorderTreeWalk() { preorderTreeWalk(root); }
+    public void preorderTreeWalk() {
+        preorderTreeWalk(root);
+    }
 
     private void preorderTreeWalk(Node node) {
         if (node != null) {
@@ -48,7 +48,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
     }
 
-    public void postorderTreeWalk() { postorderTreeWalk(root);}
+    public void postorderTreeWalk() {
+        postorderTreeWalk(root);
+    }
 
     private void postorderTreeWalk(Node node) {
         if (node != null) {
