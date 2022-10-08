@@ -9,11 +9,12 @@ public class Student implements Comparable<Student> {
         this.fio = s;
     }
 
-    public int compareTo(Student s) {
-        if (course != s.course) {
-            return course - s.course;
+    @Override
+    public int compareTo(Student student) {
+        if (course != student.course) {
+            return course - student.course;
         }
-        return fio.compareTo(s.fio);
+        return fio.compareTo(student.fio);
     }
 
     public String toString() {

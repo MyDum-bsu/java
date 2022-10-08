@@ -23,9 +23,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
     }
 
-
     public void inorderTreeWalk() {
         inorderTreeWalk(root);
+        System.out.println();
     }
 
     private void inorderTreeWalk(Node node) {
@@ -38,6 +38,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     public void preorderTreeWalk() {
         preorderTreeWalk(root);
+        System.out.println();
     }
 
     private void preorderTreeWalk(Node node) {
@@ -50,6 +51,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     public void postorderTreeWalk() {
         postorderTreeWalk(root);
+        System.out.println();
     }
 
     private void postorderTreeWalk(Node node) {
@@ -60,8 +62,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
     }
 
-
     public boolean search(T key) {
+        if (key == null) {
+            throw new IllegalArgumentException("key is null");
+        }
         //return search(root, key) != null;
         return iterativeTreeSearch(root, key) != null;
     }
@@ -78,7 +82,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     private Node iterativeTreeSearch(Node x, T key) {
-        // Node z = x;
         while (x != null && key.compareTo(x.key) != 0) {
             if (key.compareTo(x.key) < 0) {
                 x = x.left;
@@ -88,7 +91,6 @@ public class BinarySearchTree<T extends Comparable<T>> {
         }
         return x;
     }
-
 
     public T minimum() {
         Node x = root;
@@ -106,11 +108,15 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return x.key;
     }
 
-    public void insert(T key) {
+    public void insert(T key) throws IllegalArgumentException {
+        if (key == null) {
+            throw new IllegalArgumentException("can't insert null in tree");
+        }
         root = insert(root, key);
     }
 
     private Node insert(Node node, T key) {
+
         Node z = new Node(key);
         if (node == null) {
             node = z;
@@ -124,6 +130,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
 
     public void delete(T key) {
+
         root = delete(root, key);
     }
 
@@ -145,8 +152,10 @@ public class BinarySearchTree<T extends Comparable<T>> {
                 while (oneLeftAlwaysRight.right != null) {
                     oneLeftAlwaysRight = oneLeftAlwaysRight.right;
                 }
-                oneLeftAlwaysRight.right = node.right;
-                return node.left;
+                T tKey = oneLeftAlwaysRight.key;
+                delete(root, oneLeftAlwaysRight.key);
+                node.key = tKey;
+                return node;
             }
         }
         return node;
