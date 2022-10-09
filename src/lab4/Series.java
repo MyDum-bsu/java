@@ -34,13 +34,14 @@ public abstract class Series {
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < n; i++) {
             string.append(getElement(i)).append(" ");
+            if (i % 20 == 0 && i > 0) {
+                string.append("\n");
+            }
         }
         return string.toString();
     }
 
     public void saveToFile(Path path) throws IOException {
-        for (int i = 0; i < n; i++) {
-            Files.write(path, toString().getBytes());
-        }
+        Files.write(path, toString().getBytes());
     }
 }
