@@ -1,14 +1,19 @@
 import lab3.BinarySearchTree;
 import lab3.Student;
 import lab4.Exponential;
+import lab4.Liner;
+import lab4.Series;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         //runIntegerTree();
-        runStudentTree();
+        //runStudentTree();
+        runLab4();
     }
 
     public static void runIntegerTree() {
@@ -24,16 +29,16 @@ public class Main {
         tree.insert(7);
         System.out.println("preorder walk");
         tree.preorderTreeWalk();
-        System.out.println("is 10 in tree: "+ tree.search(10));
+        System.out.println("is 10 in tree: " + tree.search(10));
         System.out.println("\ndelete 10\n");
         tree.delete(10);
         tree.preorderTreeWalk();
-        System.out.println("is 10 in tree: "+ tree.search(10));
+        System.out.println("is 10 in tree: " + tree.search(10));
 
         System.out.println("\ndelete 7\n");
         tree.delete(7);
         tree.preorderTreeWalk();
-        System.out.println("is 7 in tree: "+ tree.search(7));
+        System.out.println("is 7 in tree: " + tree.search(7));
     }
 
     public static void runStudentTree() {
@@ -57,12 +62,33 @@ public class Main {
 
     }
 
-    public static void runLab4() {
-        Exponential seria = new Exponential(10, 1, 3);
+    private static void runLab4() {
+        Series series;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Write number od elements, first element and delta:");
+        int n = scanner.nextInt();
+        double firstElement = scanner.nextDouble();
+        double delta = scanner.nextDouble();
+        System.out.println("Choose progression: Arithmetic or Geometric");
+        System.out.println("Type A or G:");
+        String choice = scanner.next();
+
+        series = setProgression(choice, n, firstElement, delta);
         try {
-            seria.saveToFile(Paths.get("src/lab4/test.txt"));
+            System.out.println(series.getSum());
+            series.saveToFile(Paths.get("src/lab4/test.txt"));
         } catch (IOException e) {
             System.err.println(e.getLocalizedMessage());
         }
+    }
+
+    private static Series setProgression(String choice, int n, double firstElement, double delta) {
+        if (Objects.equals(choice, "A")) {
+            return new Liner(n, firstElement, delta);
+        }
+        if (Objects.equals(choice, "G")) {
+            return new Exponential(n, firstElement, delta);
+        }
+        throw new IllegalArgumentException("wrong input");
     }
 }

@@ -1,7 +1,7 @@
 package lab4;
 
 public class Liner extends Series {
-    public Liner(int n, int firstElement, int d) {
+    public Liner(int n, double firstElement, double d) {
         super(n, firstElement, d);
     }
 
@@ -11,5 +11,10 @@ public class Liner extends Series {
             return firstElement;
         }
         return firstElement + j * delta;
+    }
+
+    @Override
+    public double getSum() {
+        return (2 * firstElement + (n - 1) * delta) * n / 2;
     }
 }
