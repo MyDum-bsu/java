@@ -11,6 +11,9 @@ public abstract class Series {
     protected double delta;
 
     Series(int n, double firstElement, double d) {
+        if (n < 0) {
+            throw new IllegalArgumentException("wrong number of elements");
+        }
         this.n = n;
         this.firstElement = firstElement;
         this.delta = d;

@@ -65,24 +65,23 @@ public class Main {
     private static void runLab4() {
         Series series;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Write number od elements, first element and delta:");
+        System.out.println("Write number of elements, first element and delta:");
         int n = scanner.nextInt();
         double firstElement = scanner.nextDouble();
         double delta = scanner.nextDouble();
         System.out.println("Choose progression: Arithmetic or Geometric");
         System.out.println("Type A or G:");
         String choice = scanner.next();
-
-        series = setProgression(choice, n, firstElement, delta);
         try {
-            System.out.println(series.getSum());
+            series = setProgression(choice, n, firstElement, delta);
             series.saveToFile(Paths.get("src/lab4/test.txt"));
-        } catch (IOException e) {
+            System.out.println(series.getSum());
+        } catch (IOException | IllegalArgumentException e) {
             System.err.println(e.getLocalizedMessage());
         }
     }
 
-    private static Series setProgression(String choice, int n, double firstElement, double delta) {
+    private static Series setProgression(String choice, int n, double firstElement, double delta) throws IllegalArgumentException {
         if (Objects.equals(choice, "A")) {
             return new Liner(n, firstElement, delta);
         }
