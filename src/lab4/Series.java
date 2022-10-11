@@ -1,14 +1,13 @@
 package lab4;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class Series {
     protected final int n;
-    protected double firstElement;
-    protected double delta;
+    protected final double firstElement;
+    protected final double delta;
 
     Series(int n, double firstElement, double d) {
         if (n < 0) {
