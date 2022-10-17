@@ -7,20 +7,11 @@ public class Exponential extends Series {
 
     @Override
     public double getElement(int j) {
-        double element = firstElement;
-        while (j > 0) {
-            element *= delta;
-            j--;
-        }
-        return element;
+        return Math.pow(delta, j) * firstElement;
     }
 
     @Override
     public double getSum() {
-        double k = 1;
-        for (int i = 0; i < n; i++) {
-            k *= delta;
-        }
-        return firstElement * (k - 1) / (delta - 1);
+        return firstElement * (Math.pow(delta, n) - 1) / (delta - 1);
     }
 }
