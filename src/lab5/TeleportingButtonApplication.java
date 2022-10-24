@@ -19,7 +19,7 @@ public class TeleportingButtonApplication extends JFrame {
     private void initDefaultSet() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 150, 600,300);
+        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 150, 600, 300);
         setMinimumSize(new Dimension(600, 300));
         getContentPane().setBackground(Color.BLACK);
         setLayout(new BorderLayout());
@@ -31,17 +31,21 @@ public class TeleportingButtonApplication extends JFrame {
         add(point, BorderLayout.SOUTH);
     }
 
+    private void updatePos(Point p) {
+        point.setText("X: " + p.x + " Y: " + p.y);
+    }
+
     private void initPanel() {
         jPanel = new JPanel(null);
         jPanel.setBackground(Color.BLACK);
-        JButton button = new JButton("Click me");
+        JButton button = new JButton("MOVE ME");
         button.setSize(button.getPreferredSize());
         jPanel.add(button);
         add(jPanel);
-        addPanelAction(button);
+        addMouseAction(button);
     }
 
-    private void addPanelAction(JButton button) {
+    private void addMouseAction(JButton button) {
         jPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
@@ -54,29 +58,23 @@ public class TeleportingButtonApplication extends JFrame {
                 button.setLocation(mouseEvent.getPoint());
             }
         });
-        ButtonHandler handler = new ButtonHandler(button, this);
+        ButtonHandler handler = new ButtonHandler(button);
         button.addMouseMotionListener(handler);
         button.addKeyListener(handler);
     }
 
-    private void updatePos(Point p) {
-        point.setText("X: " + p.x + " Y: " + p.y);
-    }
-
-    private static class ButtonHandler extends KeyAdapter implements MouseMotionListener {
+    private class ButtonHandler extends KeyAdapter implements MouseMotionListener {
         private final JButton button;
-        private final TeleportingButtonApplication app;
 
-        private ButtonHandler(JButton button, TeleportingButtonApplication app) {
+        private ButtonHandler(JButton button) {
             this.button = button;
-            this.app = app;
         }
 
         @Override
         public void mouseDragged(MouseEvent mouseEvent) {
             int newX = mouseEvent.getX() + button.getX();
             int newY = mouseEvent.getY() + button.getY();
-            app.updatePos(new Point(newX, newY));
+            updatePos(new Point(newX, newY));
             if ((mouseEvent.getModifiers() & ActionEvent.CTRL_MASK) != 0) {
                 button.setLocation(newX, newY);
             }
