@@ -9,7 +9,7 @@ public class TeleportingButtonApplication extends JFrame {
     private JLabel point;
 
     public TeleportingButtonApplication() {
-        super();
+        super("Teleporting Button");
         initDefaultSet();
         initPoint();
         initPanel();
@@ -40,7 +40,7 @@ public class TeleportingButtonApplication extends JFrame {
         jPanel.setBackground(Color.BLACK);
         JButton button = new JButton("MOVE ME");
         button.setSize(button.getPreferredSize());
-        jPanel.add(button);
+        jPanel.add(button, SwingConstants.CENTER);
         add(jPanel);
         addMouseAction(button);
     }
