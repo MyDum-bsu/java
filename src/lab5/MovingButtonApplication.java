@@ -46,24 +46,15 @@ public class MovingButtonApplication extends JFrame {
         jPanel.add(answerButton);
         jPanel.add(movingButton);
         answerButton.addActionListener(actionEvent -> JOptionPane.showMessageDialog(this, "Вы умеете экономить!", "Уважаемо", JOptionPane.INFORMATION_MESSAGE));
-        movingButton.addMouseMotionListener(new MouseMotionAdapter() {
+        movingButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-                mouseMoved(mouseEvent);
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {
-                double dist = mouseEvent.getPoint().distance(mouseEvent.getPoint());
-                if (dist < 20) {
-                    moveButton();
-                }
+            public void mouseEntered(MouseEvent mouseEvent) {
+                moveButton();
             }
 
             private void moveButton() {
-                //new Random().nextInt(600), new Random().nextInt(300)
-                int rndX = ThreadLocalRandom.current().nextInt(0, jPanel.getWidth());
-                int rndY = ThreadLocalRandom.current().nextInt(0, jPanel.getHeight());
+                int rndX = ThreadLocalRandom.current().nextInt(0, jPanel.getWidth() - movingButton.getWidth());
+                int rndY = ThreadLocalRandom.current().nextInt(0, jPanel.getHeight() - movingButton.getHeight());
                 movingButton.setLocation(rndX, rndY);
             }
         });
