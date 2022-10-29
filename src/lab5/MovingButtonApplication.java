@@ -48,10 +48,6 @@ public class MovingButtonApplication extends JFrame {
         movingButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-                moveButton();
-            }
-
-            private void moveButton() {
                 int rndX = ThreadLocalRandom.current().nextInt(0, jPanel.getWidth() - movingButton.getWidth());
                 int rndY = ThreadLocalRandom.current().nextInt(0, jPanel.getHeight() - movingButton.getHeight());
                 movingButton.setLocation(rndX, rndY);
