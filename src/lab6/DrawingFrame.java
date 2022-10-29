@@ -2,8 +2,6 @@ package lab6;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 public class DrawingFrame extends JFrame {
     private JRadioButton redButton;
