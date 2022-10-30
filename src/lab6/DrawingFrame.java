@@ -11,7 +11,7 @@ public class DrawingFrame extends JFrame {
 
     private final ArrayList<Line> lines = new ArrayList<>();
     private final ArrayList<Line> bufferLines = new ArrayList<>();
-    private Color color = Color.RED;
+    private Color color;
 
     JRadioButton redButton;
     JRadioButton greenButton;
