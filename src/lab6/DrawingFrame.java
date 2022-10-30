@@ -12,10 +12,8 @@ public class DrawingFrame extends JFrame {
     private final ArrayList<Line> lines = new ArrayList<>();
     private final ArrayList<Line> bufferLines = new ArrayList<>();
     private Color color;
-
-    JRadioButton redButton;
-    JRadioButton greenButton;
-    JRadioButton blueButton;
+    private JRadioButton redButton;
+    private JRadioButton greenButton;
 
     public DrawingFrame() {
         super("Drawing Frame");
@@ -39,13 +37,14 @@ public class DrawingFrame extends JFrame {
         ButtonGroup buttonGroup = new ButtonGroup();
         redButton = new JRadioButton("red");
         greenButton = new JRadioButton("green");
-        blueButton = new JRadioButton("blue");
+        JRadioButton blueButton = new JRadioButton("blue");
         JPanel colorPanel = new JPanel(new FlowLayout());
         colorPanel.setBackground(Color.BLACK);
         buttonGroup.add(redButton);
-        redButton.setSelected(true);
         buttonGroup.add(greenButton);
         buttonGroup.add(blueButton);
+
+        redButton.setSelected(true);
 
         colorPanel.add(redButton);
         colorPanel.add(greenButton);
@@ -86,13 +85,17 @@ public class DrawingFrame extends JFrame {
         private final Point a;
         private final Point b;
 
+        private final Color color;
+
         private void drawLine(Graphics g) {
+            g.setColor(color);
             g.drawLine(a.x, a.y, b.x, b.y);
         }
 
-        Line(Point a, Point b) {
+        Line(Point a, Point b, Color color) {
             this.a = a;
             this.b = b;
+            this.color = color;
         }
     }
 
@@ -116,7 +119,7 @@ public class DrawingFrame extends JFrame {
         }
 
         private void addLine(Point point) {
-            Line line = new Line(lastPoint, point);
+            Line line = new Line(lastPoint, point, color);
             lines.add(line);
             bufferLines.add(line);
             update(getGraphics());
