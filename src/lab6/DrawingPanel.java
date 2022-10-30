@@ -7,64 +7,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-public class DrawingFrame extends JFrame {
-
+public class DrawingPanel extends JPanel {
     private final ArrayList<Line> lines = new ArrayList<>();
     private final ArrayList<Line> bufferLines = new ArrayList<>();
     private Color color;
-    private JRadioButton redButton;
-    private JRadioButton greenButton;
 
-    public DrawingFrame() {
-        super("Drawing Frame");
-        initDefaultSet();
-        DrawingFrameMouseHandler handler = new DrawingFrameMouseHandler();
+
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public DrawingPanel(Color color) {
+        this.color = color;
+        setBackground(Color.BLACK);
+        DrawingPanelMouseHandler handler = new DrawingPanelMouseHandler();
         addMouseMotionListener(handler);
         addMouseListener(handler);
-        initColorButtons();
-        setVisible(true);
-    }
 
-    private void initDefaultSet() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 150, 600, 300);
-        setMinimumSize(new Dimension(600, 300));
-        getContentPane().setBackground(Color.BLACK);
-    }
-
-    private void initColorButtons() {
-        ButtonGroup buttonGroup = new ButtonGroup();
-        redButton = new JRadioButton("red");
-        greenButton = new JRadioButton("green");
-        JRadioButton blueButton = new JRadioButton("blue");
-        JPanel colorPanel = new JPanel(new FlowLayout());
-        colorPanel.setBackground(Color.BLACK);
-        buttonGroup.add(redButton);
-        buttonGroup.add(greenButton);
-        buttonGroup.add(blueButton);
-
-        redButton.setSelected(true);
-
-        colorPanel.add(redButton);
-        colorPanel.add(greenButton);
-        colorPanel.add(blueButton);
-        add(colorPanel);
-    }
-
-    private Color getColor() {
-        if (redButton.isSelected()) {
-            return Color.RED;
-        } else if (greenButton.isSelected()) {
-            return Color.GREEN;
-        }
-        return Color.BLUE;
     }
 
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
-        color = getColor();
         graphics.setColor(color);
         for (Line line : lines) {
             line.drawLine(graphics);
@@ -73,7 +38,6 @@ public class DrawingFrame extends JFrame {
 
     @Override
     public void update(Graphics graphics) {
-        color = getColor();
         graphics.setColor(color);
         for (Line bufferLine : bufferLines) {
             bufferLine.drawLine(graphics);
@@ -99,7 +63,7 @@ public class DrawingFrame extends JFrame {
         }
     }
 
-    private class DrawingFrameMouseHandler extends MouseAdapter implements MouseMotionListener {
+    private class DrawingPanelMouseHandler extends MouseAdapter implements MouseMotionListener {
         private Point lastPoint;
 
         @Override
