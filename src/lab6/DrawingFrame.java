@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class DrawingFrame extends JFrame {
     DrawingPanel contentPanel;
@@ -68,18 +69,26 @@ public class DrawingFrame extends JFrame {
                 try {
                     savePanelContentAsImage();
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(DrawingFrame.this, "Wrong File", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(DrawingFrame.this, e.getLocalizedMessage(), "Error!", JOptionPane.PLAIN_MESSAGE);
                 }
             }
 
             private void savePanelContentAsImage() throws IOException {
                 BufferedImage img = new BufferedImage(contentPanel.getWidth(), contentPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
                 contentPanel.paint(img.getGraphics());
-                ImageIO.write(img, "png", new File("src/lab656/image.png"));
+                ImageIO.write(img, "png", Objects.requireNonNull(GetFile()));
             }
-
         });
+    }
 
+    private File GetFile() {
+        JFileChooser chooser = new JFileChooser();
+        File workingDirectory = new File(System.getProperty("user.dir"));
+        chooser.setCurrentDirectory(workingDirectory);
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+            return chooser.getSelectedFile();
+        else
+            return null;
     }
 
     private void initScrollPane() {
@@ -89,4 +98,7 @@ public class DrawingFrame extends JFrame {
         scrollPane.setVisible(true);
         add(scrollPane);
     }
+
+
+
 }
