@@ -12,8 +12,6 @@ public class DrawingPanel extends JPanel {
     private final ArrayList<Line> bufferLines = new ArrayList<>();
     private Color color;
 
-
-
     public void setColor(Color color) {
         this.color = color;
     }

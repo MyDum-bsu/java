@@ -1,31 +1,37 @@
 package lab6;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawingFrame extends JFrame {
-    DrawingPanel panel;
+    DrawingPanel contentPanel;
 
-    JPanel colorPanel;
+    JPanel toolkitPanel;
 
     public DrawingFrame() {
         super("Drawing Frame");
         initDefaultSet();
-        panel = new DrawingPanel(Color.ORANGE);
-        panel.setBorder(LineBorder.createGrayLineBorder());
+        contentPanel = new DrawingPanel(Color.ORANGE);
+        contentPanel.setBorder(LineBorder.createGrayLineBorder());
+        toolkitPanel = new JPanel();
+        toolkitPanel.setBackground(Color.BLACK);
         initColorButtons();
+        initSaving();
         initScrollPane();
-
-        //add(panel);
         setVisible(true);
     }
 
     private void initDefaultSet() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 150, 600, 300);
+        setBounds(dimension.width / 4 - 300, dimension.height / 2 - 150, 600, 300);
         setMinimumSize(new Dimension(600, 300));
         setBackground(Color.BLACK);
     }
@@ -36,28 +42,48 @@ public class DrawingFrame extends JFrame {
         JRadioButton greenButton = initColorButton("green", Color.GREEN);
         JRadioButton blueButton = initColorButton("blue", Color.BLUE);
 
-        colorPanel = new JPanel(new FlowLayout());
-        colorPanel.setBackground(Color.BLACK);
-
         buttonGroup.add(redButton);
         buttonGroup.add(greenButton);
         buttonGroup.add(blueButton);
 
-        colorPanel.add(redButton);
-        colorPanel.add(greenButton);
-        colorPanel.add(blueButton);
+        toolkitPanel.add(redButton);
+        toolkitPanel.add(greenButton);
+        toolkitPanel.add(blueButton);
 
-        add(colorPanel, BorderLayout.NORTH);
+        add(toolkitPanel, BorderLayout.NORTH);
     }
 
     private JRadioButton initColorButton(String name, Color color) {
         JRadioButton colorButton = new JRadioButton(name);
-        colorButton.addActionListener(actionEvent -> panel.setColor(color));
+        colorButton.addActionListener(actionEvent -> contentPanel.setColor(color));
         return colorButton;
     }
 
+    private void initSaving() {
+        JButton saveButton = new JButton("save");
+        toolkitPanel.add(saveButton);
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    savePanelContentAsImage();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(DrawingFrame.this, "Wrong File", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            private void savePanelContentAsImage() throws IOException {
+                BufferedImage img = new BufferedImage(contentPanel.getWidth(), contentPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                contentPanel.paint(img.getGraphics());
+                ImageIO.write(img, "png", new File("src/lab656/image.png"));
+            }
+
+        });
+
+    }
+
     private void initScrollPane() {
-        JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scrollPane = new JScrollPane(contentPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.createVerticalScrollBar();
         scrollPane.createHorizontalScrollBar();
         scrollPane.setVisible(true);
