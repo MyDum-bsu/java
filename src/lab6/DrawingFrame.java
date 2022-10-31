@@ -85,10 +85,10 @@ public class DrawingFrame extends JFrame {
         JFileChooser chooser = new JFileChooser();
         File workingDirectory = new File(System.getProperty("user.dir"));
         chooser.setCurrentDirectory(workingDirectory);
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
-        else
-            return null;
+        }
+        return null;
     }
 
     private void initScrollPane() {
@@ -98,7 +98,6 @@ public class DrawingFrame extends JFrame {
         scrollPane.setVisible(true);
         add(scrollPane);
     }
-
 
 
 }
