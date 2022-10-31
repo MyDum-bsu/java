@@ -33,7 +33,7 @@ public class DrawingFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(dimension.width / 4 - 300, dimension.height / 2 - 150, 600, 300);
-        setMinimumSize(new Dimension(600, 300));
+        setMinimumSize(new Dimension(1000, 600));
         setBackground(Color.BLACK);
     }
 
@@ -63,32 +63,68 @@ public class DrawingFrame extends JFrame {
     private void initSaving() {
         JButton saveButton = new JButton("save");
         toolkitPanel.add(saveButton);
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    savePanelContentAsImage();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(DrawingFrame.this, e.getLocalizedMessage(), "Error!", JOptionPane.PLAIN_MESSAGE);
-                }
+        saveButton.addActionListener(actionEvent -> {
+            try {
+                savePanelContentAsImage();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "ERROR", JOptionPane.PLAIN_MESSAGE);
             }
+        });
 
-            private void savePanelContentAsImage() throws IOException {
-                BufferedImage img = new BufferedImage(contentPanel.getWidth(), contentPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
-                contentPanel.paint(img.getGraphics());
-                ImageIO.write(img, "png", Objects.requireNonNull(GetFile()));
+        JButton openButton = new JButton("open");
+        toolkitPanel.add(openButton);
+        openButton.addActionListener(actionEvent -> {
+            try {
+                openImage();
+            } catch (IOException exception) {
+                JOptionPane.showMessageDialog(this, exception.getLocalizedMessage(), "ERROR", JOptionPane.PLAIN_MESSAGE);
             }
         });
     }
 
-    private File GetFile() {
-        JFileChooser chooser = new JFileChooser();
-        File workingDirectory = new File(System.getProperty("user.dir"));
-        chooser.setCurrentDirectory(workingDirectory);
+    private void savePanelContentAsImage() throws IOException {
+        BufferedImage img = new BufferedImage(contentPanel.getWidth(), contentPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+        contentPanel.paint(img.getGraphics());
+        File file = setFile();
+        if (file == null) {
+            return;
+        }
+        ImageIO.write(img, "png", file);
+    }
+
+    private void openImage() throws IOException {
+        File file = getFile();
+        if (file == null) {
+            return;
+        }
+        BufferedImage bufferedImage = ImageIO.read(file);
+        //setContentPane(new JLabel(new ImageIcon(bufferedImage)));
+
+    }
+
+    private File setFile() {
+        JFileChooser chooser = createFileChooser();
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
         }
         return null;
+    }
+
+    private File getFile() {
+        JFileChooser chooser = createFileChooser();
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
+        }
+        return null;
+    }
+
+
+
+    private JFileChooser createFileChooser() {
+        JFileChooser chooser = new JFileChooser();
+        File workingDirectory = new File(System.getProperty("user.dir"));
+        chooser.setCurrentDirectory(workingDirectory);
+        return chooser;
     }
 
     private void initScrollPane() {
