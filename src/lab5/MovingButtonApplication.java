@@ -52,8 +52,6 @@ public class MovingButtonApplication extends JFrame {
                 int rndY = ThreadLocalRandom.current().nextInt(0, jPanel.getHeight() - movingButton.getHeight());
                 movingButton.setLocation(rndX, rndY);
             }
-        });
-        movingButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 JOptionPane.showMessageDialog(MovingButtonApplication.this, "Ну, больше она не станет", "Успокойся", JOptionPane.ERROR_MESSAGE);
