@@ -20,7 +20,6 @@ public class DrawingFrame extends JFrame {
         super("Drawing Frame");
         initDefaultSet();
         contentPanel = new DrawingPanel(Color.ORANGE);
-        contentPanel.setBorder(LineBorder.createGrayLineBorder());
         toolkitPanel = new JPanel();
         toolkitPanel.setBackground(Color.BLACK);
         initColorButtons();
@@ -32,7 +31,7 @@ public class DrawingFrame extends JFrame {
     private void initDefaultSet() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 4 - 300, dimension.height / 2 - 150, 600, 300);
+        setBounds(dimension.width / 2 - 500, dimension.height / 2 - 300, 1000, 600);
         setMinimumSize(new Dimension(1000, 600));
         setBackground(Color.BLACK);
     }
@@ -97,8 +96,8 @@ public class DrawingFrame extends JFrame {
         if (file == null) {
             return;
         }
-        BufferedImage bufferedImage = ImageIO.read(file);
-        //setContentPane(new JLabel(new ImageIcon(bufferedImage)));
+        contentPanel.loadImage(ImageIO.read(file));
+        //  pack();
 
     }
 
@@ -118,8 +117,6 @@ public class DrawingFrame extends JFrame {
         return null;
     }
 
-
-
     private JFileChooser createFileChooser() {
         JFileChooser chooser = new JFileChooser();
         File workingDirectory = new File(System.getProperty("user.dir"));
@@ -131,6 +128,7 @@ public class DrawingFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(contentPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.createVerticalScrollBar();
         scrollPane.createHorizontalScrollBar();
+        contentPanel.setPreferredSize(new Dimension(1200, 800));
         scrollPane.setVisible(true);
         add(scrollPane);
     }

@@ -31,6 +31,7 @@ public class TeleportingButtonApplication extends JFrame {
         add(point, BorderLayout.SOUTH);
     }
 
+
     private void updatePos(Point p) {
         point.setText("X: " + p.x + " Y: " + p.y);
     }
@@ -50,6 +51,10 @@ public class TeleportingButtonApplication extends JFrame {
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
                 updatePos(mouseEvent.getPoint());
+            }
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+                mouseMoved(mouseEvent);
             }
         });
         jPanel.addMouseListener(new MouseAdapter() {
@@ -81,6 +86,9 @@ public class TeleportingButtonApplication extends JFrame {
         }
 
         @Override
+        public void mouseMoved(MouseEvent mouseEvent) {}
+
+        @Override
         public void keyTyped(KeyEvent keyEvent) {
             if (keyEvent.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
                 StringBuilder s = new StringBuilder(button.getText());
@@ -96,8 +104,5 @@ public class TeleportingButtonApplication extends JFrame {
             button.setText(button.getText() + keyEvent.getKeyChar());
             button.setSize(button.getPreferredSize());
         }
-
-        @Override
-        public void mouseMoved(MouseEvent mouseEvent) {}
     }
 }
