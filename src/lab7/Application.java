@@ -5,10 +5,8 @@ import java.awt.*;
 
 public class Application extends JFrame {
     public Application() {
+        super("Lab 7");
         initDefaultSet();
-        //add(new FirstCard(), BorderLayout.CENTER);
-        //add(new SecondCard(), BorderLayout.CENTER);
-        //add(new ThirdCard(), BorderLayout.CENTER);
         initTabbedPane();
         setVisible(true);
     }

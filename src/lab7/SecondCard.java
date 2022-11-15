@@ -18,6 +18,7 @@ public class SecondCard extends JPanel implements MouseListener{
     private final Color NEW_COLOR = Color.RED;
 
     SecondCard() {
+        super();
         setLayout(new GridLayout(size, size));
         initButtons();
         int pixels = 70;

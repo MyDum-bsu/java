@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FirstCard extends JPanel {
-    final String[] leftData = {"Manjaro", "Linux Mint", "Debian", "Ubuntu", "Clear Linux", "MX Linux", "Zorin OS", "Lubuntu", "Linux Lite", "Fedora"};
-    final String[] rightData = {"Petuxon", "JavaStriptizer", "Jaba", "C", "C++", "Go"};
+    final String[] leftData = {"Manjaro", "Linux Mint", "Debian", "Ubuntu", "Clear Linux", "MX Linux", "Zorin OS", "Lubuntu", "Linux Lite", "Fedora", "Ubuntu"};
+    final String[] rightData = {"Petuhon", "JavaScript", "Jaba", "C", "C++", "Go"};
     private JButton rightButton;
     private JButton leftButton;
 
@@ -15,6 +15,7 @@ public class FirstCard extends JPanel {
     private JList<String> rightList;
 
     FirstCard() {
+        super();
         setLayout(new BorderLayout());
         initButtons();
         initData();
@@ -47,15 +48,15 @@ public class FirstCard extends JPanel {
 
     private void addActionListener() {
         rightButton.addActionListener(actionEvent -> {
-            for (String s : leftList.getSelectedValuesList()) {
-                rightListModel.addElement(s);
-                leftListModel.removeElement(s);
+            for (int i : leftList.getSelectedIndices()) {
+                rightListModel.addElement(leftListModel.getElementAt(i));
+                leftListModel.remove(i);
             }
         });
         leftButton.addActionListener(actionEvent -> {
-            for (String s : rightList.getSelectedValuesList()) {
-                leftListModel.addElement(s);
-                rightListModel.removeElement(s);
+            for (int i : rightList.getSelectedIndices()) {
+                leftListModel.addElement(rightListModel.getElementAt(i));;
+                rightListModel.remove(i);
             }
         });
     }
