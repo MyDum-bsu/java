@@ -33,19 +33,6 @@ public class Export {
         Export export = (Export) o;
         return quantity == export.quantity && name.equals(export.name) && country.equals(export.country);
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -56,5 +43,17 @@ public class Export {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

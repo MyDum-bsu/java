@@ -7,13 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Application extends JFrame implements ActionListener {
     private JMenuItem menuItem;
@@ -23,6 +23,9 @@ public class Application extends JFrame implements ActionListener {
     private List list;
     private List sortedList;
 
+    private JTextField nameFilter;
+    private JLabel totalQuantity;
+
     private ArrayList<Export> collection;
 
     public Application() {
@@ -30,9 +33,29 @@ public class Application extends JFrame implements ActionListener {
         defaultSetInit();
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         menuBarInit();
+        countryFilterInit();
         listsInit();
         buttonsInit();
         setVisible(true);
+    }
+
+    private void countryFilterInit() {
+        Box box = new Box(2);
+        JLabel label = new JLabel("Name:");
+        label.setForeground(Color.RED);
+        nameFilter = new JTextField();
+        nameFilter.setBackground(Color.BLACK);
+        nameFilter.setForeground(Color.GREEN);
+        JLabel totalLabel = new JLabel("Total:");
+        totalLabel.setForeground(Color.RED);
+        totalQuantity = new JLabel("0");
+        totalQuantity.setForeground(Color.YELLOW);
+        box.add(label);
+        box.add(nameFilter);
+        box.add(totalLabel);
+        box.add(totalQuantity);
+        add(box);
+        pack();
     }
 
     private void defaultSetInit() {
@@ -55,10 +78,13 @@ public class Application extends JFrame implements ActionListener {
     }
 
     private void listsInit() {
+        collection = new ArrayList<>();
         list = new List();
         sortedList = new List();
         list.setBackground(Color.BLACK);
         sortedList.setBackground(Color.BLACK);
+        list.setForeground(Color.WHITE);
+        sortedList.setForeground(Color.WHITE);
         Box box = new Box(2);
         box.add(list);
         box.add(sortedList);
@@ -88,9 +114,31 @@ public class Application extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(show)) {
             showDataFromCollection(list, collection);
+            showDataFromCollection(sortedList, sortByName());
         } else if (actionEvent.getSource().equals(menuItem)) {
             fileChooserInit();
+        } else if (actionEvent.getSource().equals(add)) {
+            Export export = new Export();
+            new AddExportDialog(this, export);
+            collection.add(export);
+            showDataFromCollection(list, collection);
+        } else if (actionEvent.getSource().equals(edit)) {
+            int index = list.getSelectedIndex();
+            if (index != -1) {
+                new AddExportDialog(this, collection.get(index));
+                showDataFromCollection(list, collection);
+                showDataFromCollection(sortedList, sortByName());
+            }
         }
+    }
+
+    private ArrayList<Export> sortByName() {
+        sortedList.removeAll();
+        String name = nameFilter.getText();
+        AtomicInteger total = new AtomicInteger();
+        ArrayList<Export> sorted = (ArrayList<Export>) collection.stream().filter(export -> export.getName().equals(name)).peek(export -> total.addAndGet(export.getQuantity())).collect(Collectors.toList());
+        totalQuantity.setText(String.valueOf(total));
+        return sorted;
     }
 
     private void fileChooserInit() {
@@ -117,39 +165,31 @@ public class Application extends JFrame implements ActionListener {
     }
 
     private ArrayList<String> readDataFromFile(Path path) {
-        ArrayList<String> lines = new ArrayList<>();
         try {
-            Files.write(path, lines, StandardCharsets.UTF_8);
+            return (ArrayList<String>) Files.readAllLines(path);
         } catch (IOException exception) {
             JOptionPane.showMessageDialog(this, exception.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        return lines;
+        return new ArrayList<>();
     }
 
     private void parseData(ArrayList<String> lines) {
-        Scanner scanner;
         String name;
         String country;
         int quantity;
         for (String line : lines) {
-            scanner = new Scanner(line);
-            while (scanner.hasNext()) {
-                try {
-                    name = scanner.next();
-                    country = scanner.next();
-                    quantity = scanner.nextInt();
-                    if (scanner.hasNext()) {
-                        JOptionPane.showMessageDialog(this, "wrong data", "ERROR", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    collection.add(new Export(name, country, quantity));
-                } catch (InputMismatchException exception) {
+            try (Scanner scanner = new Scanner(line)) {
+                name = scanner.next();
+                country = scanner.next();
+                quantity = scanner.nextInt();
+                if (scanner.hasNext()) {
                     JOptionPane.showMessageDialog(this, "wrong data", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+                collection.add(new Export(name, country, quantity));
+            } catch (InputMismatchException exception) {
+                JOptionPane.showMessageDialog(this, "wrong data", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
         }
-// TODO: выяснить, почему не работает открытие файла (кажется, collection == null)
-// TODO: сделать задание 7 (в методе showDataFromCollection)
-// TODO: дописать кнопки edit и add
     }
 }

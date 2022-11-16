@@ -15,14 +15,14 @@ public class AddExportDialog extends JDialog implements ActionListener {
     private JTextField quantityText;
     Export export;
 
-    AddExportDialog(JFrame frame) {
+    AddExportDialog(JFrame frame, Export export) {
         super(frame, "add export", true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        export = new Export();
+        this.export = export;
         acceptButton = new JButton("ok");
+        acceptButton.addActionListener(this);
         initLabels();
         initTextFields();
-        acceptButton.addActionListener(this);
         initForm();
         setVisible(true);
     }
@@ -41,15 +41,9 @@ public class AddExportDialog extends JDialog implements ActionListener {
     }
 
     private void initTextFields() {
-        nameText = new JTextField("", 5);
-        countryText = new JTextField("", 5);
-        quantityText = new JTextField("", 5);
-    }
-
-    private void initData() {
-        export.setName(nameText.getText());
-        export.setCountry(countryText.getText());
-        export.setQuantity(Integer.parseInt(quantityText.getText()));
+        nameText = new JTextField(export.getName(), 10);
+        countryText = new JTextField(export.getCountry(), 10);
+        quantityText = new JTextField(String.valueOf(export.getQuantity()), 10);
     }
 
     private void initLabels() {
@@ -58,11 +52,23 @@ public class AddExportDialog extends JDialog implements ActionListener {
         quantityLabel = new JLabel("quantity");
     }
 
+    private void initData() throws NumberFormatException {
+        export.setName(nameText.getText());
+        export.setCountry(countryText.getText());
+        export.setQuantity(Integer.parseInt(quantityText.getText()));
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(acceptButton)) {
-            initData();
-            // TODO: add exceptions
+            try {
+                initData();
+                setVisible(false);
+            }
+            catch (NumberFormatException err) {
+                JOptionPane.showMessageDialog(this, err, "ERROR", JOptionPane.PLAIN_MESSAGE);
+            }
         }
+
     }
 }
