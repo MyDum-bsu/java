@@ -18,6 +18,8 @@ public class AddExportDialog extends JDialog implements ActionListener {
     AddExportDialog(JFrame frame, Export export) {
         super(frame, "add export", true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(dimension.width / 2 - 40, dimension.height / 2 - 35, 80, 70);
         this.export = export;
         acceptButton = new JButton("ok");
         acceptButton.addActionListener(this);
@@ -63,6 +65,19 @@ public class AddExportDialog extends JDialog implements ActionListener {
         if (actionEvent.getSource().equals(acceptButton)) {
             try {
                 initData();
+                if (export.getName().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Enter name of export", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (export.getCountry().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Enter country", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (export.getQuantity() == 0) {
+                    JOptionPane.showMessageDialog(this, "Enter quantity of export", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 setVisible(false);
             }
             catch (NumberFormatException err) {

@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -61,7 +62,7 @@ public class Application extends JFrame implements ActionListener {
     private void defaultSetInit() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 400, dimension.height / 2 - 400, 800, 800);
+        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 100, 600, 200);
         setMinimumSize(new Dimension(600, 200));
         getContentPane().setBackground(Color.BLACK);
     }
@@ -120,7 +121,9 @@ public class Application extends JFrame implements ActionListener {
         } else if (actionEvent.getSource().equals(add)) {
             Export export = new Export();
             new AddExportDialog(this, export);
-            collection.add(export);
+            if (!export.equals(new Export())) {
+                collection.add(export);
+            }
             showDataFromCollection(list, collection);
         } else if (actionEvent.getSource().equals(edit)) {
             int index = list.getSelectedIndex();
