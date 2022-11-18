@@ -1,24 +1,21 @@
 package lab6;
 
+import gui.AbstractApplication;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
-public class DrawingFrame extends JFrame {
+public class DrawingFrame extends AbstractApplication {
     DrawingPanel contentPanel;
 
     JPanel toolkitPanel;
 
     public DrawingFrame() {
-        super("Drawing Frame");
-        initDefaultSet();
+        super("Drawing Frame", 800, 800);
         contentPanel = new DrawingPanel(Color.ORANGE);
         toolkitPanel = new JPanel();
         toolkitPanel.setBackground(Color.BLACK);

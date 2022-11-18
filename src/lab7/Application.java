@@ -1,12 +1,12 @@
 package lab7;
 
-import javax.swing.*;
-import java.awt.*;
+import gui.AbstractApplication;
 
-public class Application extends JFrame {
+import javax.swing.*;
+
+public class Application extends AbstractApplication {
     public Application() {
-        super("Lab 7");
-        initDefaultSet();
+        super("Lab 7", 800, 600);
         initTabbedPane();
         setVisible(true);
     }
@@ -17,13 +17,5 @@ public class Application extends JFrame {
         tabbedPane.addTab("tab 2", new SecondCard());
         tabbedPane.addTab("tab 3", new ThirdCard());
         add(tabbedPane);
-    }
-
-    private void initDefaultSet() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 400, dimension.height / 2 - 400, 800, 800);
-        setMinimumSize(new Dimension(800, 800));
-        getContentPane().setBackground(Color.BLACK);
     }
 }

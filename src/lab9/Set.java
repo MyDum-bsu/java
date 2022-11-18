@@ -13,6 +13,7 @@ public class Set<T> implements Iterator<T> {
     public Set() {
         data = new ArrayList<>();
     }
+
     public Set(Set<T> s) {
         this.data = s.data;
     }
@@ -41,7 +42,9 @@ public class Set<T> implements Iterator<T> {
     }
 
     public void add(T element) {
-        data.add(element);
+        if (!data.contains(element)) {
+            data.add(element);
+        }
     }
 
     public void remove(Object o) {
@@ -49,12 +52,14 @@ public class Set<T> implements Iterator<T> {
     }
 
     public void addAll(Collection<T> collection) {
-        data.addAll(collection);
+        for (T element : collection) {
+            add(element);
+        }
     }
 
     public Set<T> union(Set<T> s) {
         Set<T> unionSet = new Set<>(this);
-        while(s.hasNext()) {
+        while (s.hasNext()) {
             T element = s.next();
             if (!unionSet.data.contains(element)) {
                 unionSet.add(element);
@@ -65,7 +70,7 @@ public class Set<T> implements Iterator<T> {
 
     public Set<T> intersection(Set<T> s) {
         Set<T> intersectionSet = new Set<>();
-        while(s.hasNext()) {
+        while (s.hasNext()) {
             T element = s.next();
             if (this.data.contains(element)) {
                 intersectionSet.add(element);
@@ -111,5 +116,9 @@ public class Set<T> implements Iterator<T> {
             model.addElement(element);
         }
         return model;
+    }
+
+    public ArrayList<T> toArrayList() {
+        return data;
     }
 }

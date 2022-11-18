@@ -1,28 +1,21 @@
 package lab5;
 
+import gui.AbstractApplication;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class TeleportingButtonApplication extends JFrame {
+public class TeleportingButtonApplication extends AbstractApplication {
     private JPanel jPanel;
     private JLabel point;
 
     public TeleportingButtonApplication() {
-        super("Teleporting Button");
-        initDefaultSet();
+        super("Teleporting Button", 400, 600);
+        setLayout(new BorderLayout());
         initPoint();
         initPanel();
         setVisible(true);
-    }
-
-    private void initDefaultSet() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 150, 600, 300);
-        setMinimumSize(new Dimension(600, 300));
-        getContentPane().setBackground(Color.BLACK);
-        setLayout(new BorderLayout());
     }
 
     private void initPoint() {

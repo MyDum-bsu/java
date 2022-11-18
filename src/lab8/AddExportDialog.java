@@ -15,7 +15,7 @@ public class AddExportDialog extends JDialog implements ActionListener {
     private JTextField quantityText;
     Export export;
 
-    AddExportDialog(JFrame frame, Export export) {
+    public AddExportDialog(JFrame frame, Export export) {
         super(frame, "add export", true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();

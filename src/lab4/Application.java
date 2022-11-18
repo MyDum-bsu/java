@@ -1,11 +1,13 @@
 package lab4;
 
+import gui.AbstractApplication;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class Application extends JFrame {
+public class Application extends AbstractApplication {
     private Series series;
     private int n;
     private double firstElement;
@@ -25,12 +27,8 @@ public class Application extends JFrame {
     JLabel elementsLabel;
 
     public Application() {
-        super("Series");
+        super("Series", 400, 300);
         setLayout(new GridLayout(0, 1, 0, 0));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 200, 600, 400);
-        setMinimumSize(new Dimension(600, 400));
         initFields();
         setVisible(true);
     }

@@ -1,5 +1,7 @@
 package lab8;
 
+import gui.AbstractApplication;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -12,26 +14,24 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class Application extends JFrame implements ActionListener {
-    private JMenuItem menuItem;
-    private JButton show;
-    private JButton edit;
-    private JButton add;
+public class Application extends AbstractApplication implements ActionListener {
+    protected JMenuItem menuItem;
+    protected JButton show;
+    protected JButton edit;
+    protected JButton add;
     private List list;
     private List sortedList;
 
-    private JTextField nameFilter;
-    private JLabel totalQuantity;
+    protected JTextField nameFilter;
+    protected JLabel totalQuantity;
 
     private ArrayList<Export> collection;
 
-    public Application() {
-        super("Lab 8");
-        defaultSetInit();
+    public Application(String s) {
+        super(s, 500, 300);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         menuBarInit();
         countryFilterInit();
@@ -59,14 +59,6 @@ public class Application extends JFrame implements ActionListener {
         pack();
     }
 
-    private void defaultSetInit() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(dimension.width / 2 - 300, dimension.height / 2 - 100, 600, 200);
-        setMinimumSize(new Dimension(600, 200));
-        getContentPane().setBackground(Color.BLACK);
-    }
-
     private void menuBarInit() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
@@ -78,7 +70,7 @@ public class Application extends JFrame implements ActionListener {
         setJMenuBar(menuBar);
     }
 
-    private void listsInit() {
+    protected void listsInit() {
         collection = new ArrayList<>();
         list = new List();
         sortedList = new List();
@@ -144,7 +136,7 @@ public class Application extends JFrame implements ActionListener {
         return sorted;
     }
 
-    private void fileChooserInit() {
+    protected void fileChooserInit() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
         fileChooser.setFileFilter(filter);
@@ -176,7 +168,7 @@ public class Application extends JFrame implements ActionListener {
         return new ArrayList<>();
     }
 
-    private void parseData(ArrayList<String> lines) {
+    protected void parseData(ArrayList<String> lines) {
         String name;
         String country;
         int quantity;
