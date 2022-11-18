@@ -8,7 +8,7 @@ public abstract class AbstractApplication extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((dimension.width - width)/ 2, (dimension.height - height) / 2, width, height);
-        setMinimumSize(new Dimension(600, 200));
+        setMinimumSize(new Dimension(width, height));
         getContentPane().setBackground(Color.BLACK);
     }
 

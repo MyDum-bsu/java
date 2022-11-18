@@ -3,6 +3,8 @@ package lab8;
 import gui.AbstractApplication;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,9 +21,9 @@ import java.util.stream.Collectors;
 
 public class Application extends AbstractApplication implements ActionListener {
     protected JMenuItem menuItem;
-    protected JButton show;
     protected JButton edit;
     protected JButton add;
+    protected JButton delete;
     private List list;
     private List sortedList;
 
@@ -31,38 +33,77 @@ public class Application extends AbstractApplication implements ActionListener {
     private ArrayList<Export> collection;
 
     public Application(String s) {
-        super(s, 500, 300);
+        super(s, 900, 200);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         menuBarInit();
-        countryFilterInit();
+        addNameFilter();
         listsInit();
         buttonsInit();
         setVisible(true);
     }
 
-    private void countryFilterInit() {
+    private void addNameFilter() {
         Box box = new Box(2);
-        JLabel label = new JLabel("Name:");
-        label.setForeground(Color.RED);
-        nameFilter = new JTextField();
-        nameFilter.setBackground(Color.BLACK);
-        nameFilter.setForeground(Color.GREEN);
+        JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setForeground(Color.RED);
+
+        nameFilterInit();
+
         JLabel totalLabel = new JLabel("Total:");
         totalLabel.setForeground(Color.RED);
-        totalQuantity = new JLabel("0");
-        totalQuantity.setForeground(Color.YELLOW);
-        box.add(label);
-        box.add(nameFilter);
-        box.add(totalLabel);
-        box.add(totalQuantity);
+
+        initTotalQuantityLabel();
+
+        JPanel filterPanel = new JPanel();
+        filterPanel.setBackground(Color.BLACK);
+        filterPanel.add(nameLabel);
+        filterPanel.add(nameFilter);
+        JPanel totalQuantityPanel = new JPanel();
+        totalQuantityPanel.setBackground(Color.BLACK);
+        totalQuantityPanel.add(totalLabel);
+        totalQuantityPanel.add(totalQuantity);
+
+        box.add(filterPanel);
+        box.add(totalQuantityPanel);
         add(box);
-        pack();
+    }
+
+    private void initTotalQuantityLabel() {
+        totalQuantity = new JLabel("0");
+        totalQuantity.setBackground(Color.BLACK);
+        totalQuantity.setForeground(Color.YELLOW);
+    }
+
+    private void nameFilterInit() {
+        nameFilter = new JTextField(15);
+        nameFilter.setBackground(Color.BLACK);
+        nameFilter.setForeground(Color.GREEN);
+        nameFilter.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                showDataFromCollection(sortedList, sortByName());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                showDataFromCollection(sortedList, sortByName());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                showDataFromCollection(sortedList, sortByName());
+            }
+        });
     }
 
     private void menuBarInit() {
         JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(Color.BLACK);
         JMenu menu = new JMenu("File");
+        menu.setForeground(Color.CYAN);
+        menu.setBackground(Color.BLACK);
         menuItem = new JMenuItem("Open");
+        menuItem.setBackground(Color.BLACK);
 
         menuItem.addActionListener(this);
         menu.add(menuItem);
@@ -85,13 +126,13 @@ public class Application extends AbstractApplication implements ActionListener {
     }
 
     private void buttonsInit() {
-        show = new JButton("Show");
         edit = new JButton("Edit");
         add = new JButton("Add");
+        delete = new JButton("Delete");
         Box box = new Box(2);
-        addButtonToBox(show, box);
         addButtonToBox(edit, box);
         addButtonToBox(add, box);
+        addButtonToBox(delete, box);
         add(box);
         pack();
     }
@@ -99,16 +140,16 @@ public class Application extends AbstractApplication implements ActionListener {
     private void addButtonToBox(JButton button, Box box) {
         button.addActionListener(this);
         JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+        button.setBackground(Color.BLACK);
+        button.setForeground(Color.ORANGE);
         panel.add(button);
         box.add(panel);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(show)) {
-            showDataFromCollection(list, collection);
-            showDataFromCollection(sortedList, sortByName());
-        } else if (actionEvent.getSource().equals(menuItem)) {
+        if (actionEvent.getSource().equals(menuItem)) {
             fileChooserInit();
         } else if (actionEvent.getSource().equals(add)) {
             Export export = new Export();
@@ -116,22 +157,29 @@ public class Application extends AbstractApplication implements ActionListener {
             if (!export.equals(new Export())) {
                 collection.add(export);
             }
-            showDataFromCollection(list, collection);
         } else if (actionEvent.getSource().equals(edit)) {
             int index = list.getSelectedIndex();
             if (index != -1) {
                 new AddExportDialog(this, collection.get(index));
-                showDataFromCollection(list, collection);
-                showDataFromCollection(sortedList, sortByName());
+            }
+        } else if (actionEvent.getSource().equals(delete)) {
+            int index = list.getSelectedIndex();
+            if (index != -1) {
+                collection.remove(index);
             }
         }
+        showDataFromCollection(list, collection);
+        showDataFromCollection(sortedList, sortByName());
     }
 
     private ArrayList<Export> sortByName() {
         sortedList.removeAll();
         String name = nameFilter.getText();
         AtomicInteger total = new AtomicInteger();
-        ArrayList<Export> sorted = (ArrayList<Export>) collection.stream().filter(export -> export.getName().equals(name)).peek(export -> total.addAndGet(export.getQuantity())).collect(Collectors.toList());
+        ArrayList<Export> sorted = (ArrayList<Export>) collection.stream()
+                .filter(export -> export.getName().equals(name))
+                .peek(export -> total.addAndGet(export.getQuantity()))
+                .collect(Collectors.toList());
         totalQuantity.setText(String.valueOf(total));
         return sorted;
     }
