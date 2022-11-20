@@ -7,15 +7,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,8 @@ public class Application extends AbstractApplication implements ActionListener {
     protected JTextField nameFilter;
     protected JLabel totalQuantity;
 
-    private ArrayList<Export> collection;
+    private java.util.List<Export> collection;
+    private TreeMap<String, Integer> map;
 
     public Application(String s) {
         super(s, 900, 200);
@@ -81,17 +81,17 @@ public class Application extends AbstractApplication implements ActionListener {
         nameFilter.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
-                showDataFromCollection(sortedList, sortByName());
+                showDataFromFilteredCollection();
             }
 
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
-                showDataFromCollection(sortedList, sortByName());
+                showDataFromFilteredCollection();
             }
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
-                showDataFromCollection(sortedList, sortByName());
+                showDataFromFilteredCollection();
             }
         });
     }
@@ -113,6 +113,7 @@ public class Application extends AbstractApplication implements ActionListener {
 
     protected void listsInit() {
         collection = new ArrayList<>();
+        map = new TreeMap<>();
         list = new List();
         sortedList = new List();
         list.setBackground(Color.BLACK);
@@ -150,6 +151,7 @@ public class Application extends AbstractApplication implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(menuItem)) {
+            collection.clear();
             fileChooserInit();
         } else if (actionEvent.getSource().equals(add)) {
             Export export = new Export();
@@ -168,8 +170,34 @@ public class Application extends AbstractApplication implements ActionListener {
                 collection.remove(index);
             }
         }
-        showDataFromCollection(list, collection);
-        showDataFromCollection(sortedList, sortByName());
+        showDataFromCollection();
+        showDataFromFilteredCollection();
+    }
+
+    private void showDataFromCollection() {
+        if (collection != null) {
+            list.removeAll();
+            for (Export export : collection) {
+                list.add(export.toString());
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No elements", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void showDataFromFilteredCollection() {
+        ArrayList<Export> sorted = sortByName();
+        map.clear();
+        for (Export export : sorted) {
+            if (map.containsKey(export.getCountry())) {
+                map.put(export.getCountry(), map.get(export.getCountry()) + export.getQuantity());
+            } else {
+                map.put(export.getCountry(), export.getQuantity());
+            }
+        }
+        for (String s : map.descendingKeySet()) {
+            sortedList.add(s + " : " + map.get(s));
+        }
     }
 
     private ArrayList<Export> sortByName() {
@@ -193,17 +221,6 @@ public class Application extends AbstractApplication implements ActionListener {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             Path path = fileChooser.getSelectedFile().toPath();
             parseData(readDataFromFile(path));
-        }
-    }
-
-    private void showDataFromCollection(List list, ArrayList<Export> collection) {
-        if (collection != null) {
-            list.removeAll();
-            for (Export export : collection) {
-                list.add(export.toString());
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "No elements", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
