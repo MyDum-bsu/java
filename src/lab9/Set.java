@@ -6,13 +6,23 @@ import java.util.List;
 import java.util.Objects;
 
 public class Set<T> implements IterableSet<T> {
-    List<T> data;
+    private final List<T> data;
 
-    public Set(Set<T> set) {
+    public static <T> Set<T> create() {
+        return new Set<>();
+    }
+
+    public static <T> Set<T> copy(Set<T> set) {
+        return new Set<>(set);
+    }
+
+
+    private Set(Set<T> set) {
         data = new ArrayList<>();
         data.addAll(set.data);
     }
-    public Set() {
+
+    private Set() {
         data = new ArrayList<>();
     }
 
@@ -38,7 +48,12 @@ public class Set<T> implements IterableSet<T> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Set<?> set = (Set<?>) o;
-        return data.equals(set.data);
+        for (Object element : set.data) {
+            if (!data.contains(element)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -76,7 +91,7 @@ public class Set<T> implements IterableSet<T> {
     public boolean addAll(Set<T> set) {
         boolean flag = true;
         for (T element : set.data) {
-            if(!add(element)) {
+            if (!add(element)) {
                 flag = false;
             }
         }
@@ -87,7 +102,7 @@ public class Set<T> implements IterableSet<T> {
         Set<T> unionSet = new Set<>(this);
         Iterator<T> iterator = set.createIterator();
         iterator.first();
-        while(!iterator.isDone()) {
+        while (!iterator.isDone()) {
             unionSet.add(iterator.currentItem());
             iterator.next();
         }
@@ -98,7 +113,7 @@ public class Set<T> implements IterableSet<T> {
         Set<T> intersectionSet = new Set<>();
         Iterator<T> iterator = set.createIterator();
         iterator.first();
-        while(!iterator.isDone()) {
+        while (!iterator.isDone()) {
             T element = iterator.currentItem();
             if (data.contains(element)) {
                 intersectionSet.add(element);

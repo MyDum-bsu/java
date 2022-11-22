@@ -1,6 +1,10 @@
 package control_work.template.first;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Person implements Comparable<Person> {
@@ -16,15 +20,15 @@ public class Person implements Comparable<Person> {
 
     @Override
     public int compareTo(Person o) {
-        return Double.compare(this.averageScore, o.averageScore);
+        return Double.compare(averageScore, o.averageScore);
     }
 
     public static Person fromString(String s) throws InputMismatchException {
         Scanner scanner = new Scanner(s);
         Person p = new Person("", 0, 0);
-//        if (!scanner.hasNext("\\w+")) {
-//            throw new InputMismatchException("Wrong person format");
-//        }
+        if (!scanner.hasNext("\\w+")) {
+            throw new InputMismatchException("Wrong person format");
+        }
         p.name = scanner.next();
         if (!scanner.hasNextInt()) {
             throw new InputMismatchException("Wrong person format");
@@ -36,6 +40,8 @@ public class Person implements Comparable<Person> {
         p.averageScore = scanner.nextDouble();
         return p;
     }
+
+
 
     @Override
     public String toString() {
