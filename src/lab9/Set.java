@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class Set<T> implements IterableSet<T> {
     private final List<T> data;
-
     public static <T> Set<T> create() {
         return new Set<>();
     }
@@ -15,7 +14,6 @@ public class Set<T> implements IterableSet<T> {
     public static <T> Set<T> copy(Set<T> set) {
         return new Set<>(set);
     }
-
 
     private Set(Set<T> set) {
         data = new ArrayList<>();
