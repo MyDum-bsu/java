@@ -40,7 +40,6 @@ public class Application extends AbstractApplication {
 
         leftList.setModel(leftSet.getListModel());
         rightList.setModel(rightSet.getListModel());
-        resultList.setModel(resultSet.getListModel());
 
     }
 
@@ -242,19 +241,19 @@ public class Application extends AbstractApplication {
         panel.add(sizeButton);
     }
 
-    public static void main(String[] args) {
-        new Application();
-//        Set<Export> leftSet = Set.create();
-//        Set<Export> rightSet = Set.create();
-//        leftSet.add(new Export("teapot", "Belarus", 200));
-//        leftSet.add(new Export("teapot", "Russia", 300));
-//        leftSet.add(new Export("laptop", "Russia", 3000));
-//        leftSet.add(new Export("laptop", "Serbia", 123));
-//        leftSet.add(new Export("laptop", "Belarus", 321));
-//
-//        rightSet.add(new Export("books", "Belarus", 5678));
-//        rightSet.add(new Export("laptop", "Serbia", 123));
-//        rightSet.add(new Export("laptop", "Belarus", 321));
-//        System.out.println(leftSet.intersection(rightSet));
-    }
+//    public static void main(String[] args) {
+//        new Application();
+////        Set<Export> leftSet = Set.create();
+////        Set<Export> rightSet = Set.create();
+////        leftSet.add(new Export("teapot", "Belarus", 200));
+////        leftSet.add(new Export("teapot", "Russia", 300));
+////        leftSet.add(new Export("laptop", "Russia", 3000));
+////        leftSet.add(new Export("laptop", "Serbia", 123));
+////        leftSet.add(new Export("laptop", "Belarus", 321));
+////
+////        rightSet.add(new Export("books", "Belarus", 5678));
+////        rightSet.add(new Export("laptop", "Serbia", 123));
+////        rightSet.add(new Export("laptop", "Belarus", 321));
+////        System.out.println(leftSet.intersection(rightSet));
+//    }
 }

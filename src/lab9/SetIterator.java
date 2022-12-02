@@ -9,7 +9,6 @@ public class SetIterator<T> implements Iterator<T> {
         current = 0;
     }
 
-
     @Override
     public void first() {
         current = 0;

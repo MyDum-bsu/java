@@ -1,7 +1,7 @@
-import lab8.Application;
+import lab10.second.Application;
 
 public class Main {
     public static void main(String[] args) {
-        new Application("Lab 8");
+        new Application();
     }
 }
