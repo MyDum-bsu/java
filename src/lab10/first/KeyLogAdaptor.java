@@ -17,6 +17,6 @@ public class KeyLogAdaptor implements Observer {
     @Override
     public void update(EventObject object) {
         KeyEvent event = (KeyEvent) object;
-        listModel.addElement(String.valueOf(event.getKeyChar()));
+        listModel.addElement(KeyEvent.getKeyText(event.getKeyCode()));
     }
 }

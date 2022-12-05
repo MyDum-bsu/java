@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class FilterByNameStrategyWithStream implements FilterExportByNameStrategy {
     @Override
-    public List<Export> sortByName(List<Export> exports, String name) {
+    public List<Export> filterByName(List<Export> exports, String name) {
         return exports.stream()
                 .filter(export -> export.getName().equals(name))
                 .collect(Collectors.toList());

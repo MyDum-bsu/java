@@ -1,7 +1,7 @@
-import lab10.second.Application;
 
 public class Main {
     public static void main(String[] args) {
-        new Application();
+        lab10.first.Application.create();
+        lab10.second.Application.create();
     }
 }

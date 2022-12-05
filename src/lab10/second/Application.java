@@ -36,7 +36,11 @@ public class Application extends AbstractApplication implements ActionListener {
     private FilterExportByNameStrategy sStrategy;
     private FilterExportByNameStrategy lStrategy;
 
-    public Application() {
+    public static Application create() {
+        return new Application();
+    }
+
+    private Application() {
         super("Lab 10", 1500, 300);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         initStrategy();
@@ -211,7 +215,7 @@ public class Application extends AbstractApplication implements ActionListener {
 
     private void showDataFromFilteredCollection(FilterExportByNameStrategy strategy, List list, TreeMap<String, Integer> map, JLabel label) {
         list.removeAll();
-        ArrayList<Export> sorted = (ArrayList<Export>) strategy.sortByName(collection, nameFilter.getText());
+        ArrayList<Export> sorted = (ArrayList<Export>) strategy.filterByName(collection, nameFilter.getText());
         label.setText(strategy.calculateTotalQuantity(sorted));
         map.clear();
         for (Export export : sorted) {

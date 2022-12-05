@@ -9,14 +9,17 @@ import java.awt.event.KeyEvent;
 
 public class Application extends AbstractApplication {
     private JLabel label;
-
     private final DefaultListModel<String> pressedKeys = new DefaultListModel<>();
 
     private final Font font = new Font("Arial", Font.PLAIN, 90);
     private Observable manager;
 
-    public Application() {
-        super("Lab 10", 800, 400);
+    public static Application create() {
+        return new Application();
+    }
+
+    private Application() {
+        super("Lab 10", 1200, 400);
         setLayout(new GridLayout(1, 0));
         initLabel();
         initList();

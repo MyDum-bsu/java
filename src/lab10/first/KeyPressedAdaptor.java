@@ -18,6 +18,6 @@ public class KeyPressedAdaptor implements Observer {
     @Override
     public void update(EventObject object) {
         KeyEvent event = (KeyEvent) object;
-        keyName.setText(String.valueOf(event.getKeyChar()));
+        keyName.setText(KeyEvent.getKeyText(event.getKeyCode()));
     }
 }

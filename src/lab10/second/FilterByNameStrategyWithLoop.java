@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FilterByNameStrategyWithLoop implements FilterExportByNameStrategy {
     @Override
-    public List<Export> sortByName(List<Export> exports, String name) {
+    public List<Export> filterByName(List<Export> exports, String name) {
         List<Export> result = new ArrayList<>();
         for (Export export : exports) {
             if (export.getName().equals(name)) {
