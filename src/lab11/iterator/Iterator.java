@@ -1,4 +1,4 @@
-package lab11;
+package lab11.iterator;
 
 public interface Iterator<T> {
     void first();

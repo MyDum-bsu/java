@@ -1,17 +1,18 @@
-package control_work.template.kr2.mvc;
+package lab11.mvc;
 
-import control_work.template.kr2.iterator.Iterator;
+
+import lab11.iterator.Iterator;
 
 import javax.swing.*;
 
 public class View<T> {
     private final DefaultListModel<T> listModel;
-    private final Stack<T> model;
+    private final Set<T> model;
 
     public DefaultListModel<T> getListModel() {
         return listModel;
     }
-    public View(Stack<T> model) {
+    public View(Set<T> model) {
         this.model = model;
         listModel = new DefaultListModel<>();
     }

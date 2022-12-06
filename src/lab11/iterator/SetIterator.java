@@ -1,10 +1,12 @@
-package lab11;
+package lab11.iterator;
+
+import lab11.mvc.Set;
 
 public class SetIterator<T> implements Iterator<T> {
     private final Set<T> set;
     private int current;
 
-    SetIterator(Set<T> set) {
+    public SetIterator(Set<T> set) {
         this.set = set;
         current = 0;
     }

@@ -1,11 +1,17 @@
-package lab11;
+package lab11.mvc;
+
+import lab11.iterator.IterableSet;
+import lab11.iterator.Iterator;
+import lab11.iterator.SetIterator;
+import lab11.visitor.Element;
+import lab11.visitor.Visitor;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Set<T> implements IterableSet<T> {
+public class Set<T> implements IterableSet<T>, Element {
     private final List<T> data;
     public static <T> Set<T> create() {
         return new Set<>();
@@ -33,9 +39,9 @@ public class Set<T> implements IterableSet<T> {
         return data.size();
     }
 
-    public boolean isEmpty() {
-        return data.isEmpty();
-    }
+//    public boolean isEmpty() {
+//        return data.isEmpty();
+//    }
 
     public void clear() {
         data.clear();
@@ -137,5 +143,10 @@ public class Set<T> implements IterableSet<T> {
 
     public T get(int index) {
         return data.get(index);
+    }
+
+    @Override
+    public void accept(Visitor v) {
+        v.visit(this);
     }
 }

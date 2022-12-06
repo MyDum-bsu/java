@@ -6,13 +6,12 @@ import control_work.template.kr2.iterator.Iterator;
 import control_work.template.kr2.visitor.Element;
 import control_work.template.kr2.visitor.Visitor;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Stack<T> implements Element, IterableCollection<T> {
-    List<T> list;
+    private final List<T> list;
 
     private Stack() {
         list = new ArrayList<>();
@@ -55,7 +54,7 @@ public class Stack<T> implements Element, IterableCollection<T> {
     public void pushAll(Stack<T> collection) {
         Iterator<T> iterator = collection.createIterator();
         iterator.first();
-        while(!iterator.isDone()) {
+        while (!iterator.isDone()) {
             push(iterator.currentItem());
             iterator.next();
         }
@@ -93,13 +92,5 @@ public class Stack<T> implements Element, IterableCollection<T> {
         return "MyCollection{" +
                 "list=" + list +
                 '}';
-    }
-
-    public DefaultListModel<T> getListModel() {
-        DefaultListModel<T> listModel = new DefaultListModel<>();
-        for (T e : list) {
-            listModel.addElement(e);
-        }
-        return listModel;
     }
 }

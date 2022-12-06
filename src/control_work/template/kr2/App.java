@@ -3,6 +3,9 @@ package control_work.template.kr2;
 import control_work.template.kr2.mvc.Controller;
 import control_work.template.kr2.mvc.Stack;
 import control_work.template.kr2.mvc.View;
+import control_work.template.kr2.strategy.IteratorStrategy;
+import control_work.template.kr2.strategy.Strategy;
+import control_work.template.kr2.strategy.VisitorStrategy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,17 +15,18 @@ public class App extends JFrame {
         new App();
     }
 
-    Stack<String> model;
-    View<String> view;
-    Controller<String> controller;
+    private Stack<String> model;
+    private View<String> view;
+    private Controller<String> controller;
+    private JButton pop;
+    private JButton push;
 
-    JButton pop;
-    JButton push;
-
-    JLabel poppedText;
-    JTextField textToPush;
-
-    JList<String> list;
+    private JLabel poppedText;
+    private JTextField textToPush;
+    private Strategy iteratorStrategy;
+    private Strategy visitorStrategy;
+    private JLabel sizeLabel;
+    private final Font font = new Font("Courier", Font.PLAIN, 90);
 
     App() {
         defaultSetInit(1000, 500);
@@ -32,31 +36,53 @@ public class App extends JFrame {
         initButtons();
         initLabels();
         addAction();
+        addStrategy();
         setVisible(true);
+    }
+
+    private void addStrategy() {
+        iteratorStrategy = new IteratorStrategy();
+        visitorStrategy = new VisitorStrategy();
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+        sizeLabel = new JLabel("size: ");
+        sizeLabel.setForeground(Color.ORANGE);
+        sizeLabel.setFont(font);
+        panel.add(sizeLabel);
+        add(panel);
     }
 
     private void initLabels() {
         JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
         textToPush = new JTextField(15);
         textToPush.setBackground(Color.BLACK);
         textToPush.setForeground(Color.CYAN);
+        textToPush.setFont(new Font("Courier", Font.PLAIN, 45));
 
         poppedText = new JLabel();
         poppedText.setBackground(Color.BLACK);
         poppedText.setForeground(Color.GREEN);
-
-        panel.add(new JLabel("push: "));
-
+        poppedText.setFont(new Font("Courier", Font.PLAIN, 45));
+        addLabel("push: ", panel);
         panel.add(textToPush);
-
-        panel.add(new JLabel("pop: "));
-
+        addLabel("pop: ", panel);
         panel.add(poppedText);
         add(panel);
     }
 
+    private void addLabel(String text, JPanel panel) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Courier", Font.PLAIN, 45));
+        label.setForeground(Color.WHITE);
+        panel.add(label);
+    }
+
     private void initList() {
-        list = new JList<>(view.getListModel());
+        JList<String> list = new JList<>(view.getListModel());
+        list.setBackground(Color.BLACK);
+        list.setForeground(Color.GREEN);
+        list.setFont(new Font("Courier", Font.PLAIN, 25));
         add(new JScrollPane(list));
     }
 
@@ -70,24 +96,39 @@ public class App extends JFrame {
         pop.addActionListener(actionEvent -> {
             try {
                 String text = controller.pop();
-                poppedText.setText(text);
+                setTextToLabel(poppedText, text);
+                setTextToLabel(sizeLabel, "size: " + iteratorStrategy.countSize(model) + " -- " + visitorStrategy.countSize(model));
             } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         });
         push.addActionListener(actionEvent -> {
             if (!textToPush.getText().isEmpty()) {
                 controller.push(textToPush.getText());
+                setTextToLabel(sizeLabel, "size: " + iteratorStrategy.countSize(model) + " -- " + visitorStrategy.countSize(model));
             }
         });
+    }
+
+    private void setTextToLabel(JLabel sizeLabel, String text) {
+        sizeLabel.setText(text);
     }
 
     private void initButtons() {
         pop = new JButton("pop");
         push = new JButton("push");
+        buttonStyle(pop);
+        buttonStyle(push);
         JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
         panel.add(pop);
         panel.add(push);
         add(panel);
+    }
+
+    private void buttonStyle(JButton button) {
+        button.setFont(new Font("Courier", Font.PLAIN, 30));
+        button.setForeground(Color.WHITE);
+        button.setBackground(Color.BLACK);
     }
 
     private void defaultSetInit(int width, int height) {

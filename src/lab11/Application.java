@@ -1,8 +1,9 @@
 package lab11;
 
 import gui.AbstractApplication;
-import lab8.AddExportDialog;
-import lab8.Export;
+import lab10.second.Export;
+import lab11.mvc.Set;
+import lab11.visitor.SizeVisitor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,8 @@ public class Application extends AbstractApplication {
     private Set<Export> leftSet;
     private Set<Export> rightSet;
     private Set<Export> resultSet;
+
+    private SizeVisitor sizeVisitor;
 
     public static Application create() {
         return new Application();
@@ -232,10 +235,12 @@ public class Application extends AbstractApplication {
     }
 
     private void initSizeButton(Set<Export> set, JPanel panel) {
+        sizeVisitor = new SizeVisitor();
+        sizeVisitor.visit(set);
         JButton sizeButton = new JButton("size");
         sizeButton.addActionListener(actionEvent -> {
-            String s = "Set contains " + set.size() + " element";
-            if (set.size() != 1) {
+            String s = "Set contains " + sizeVisitor.getSize() + " element";
+            if (sizeVisitor.getSize() != 1) {
                 s += "s";
             }
             JOptionPane.showMessageDialog(this, s, "SIZE", JOptionPane.INFORMATION_MESSAGE);
