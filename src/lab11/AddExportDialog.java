@@ -1,7 +1,5 @@
 package lab11;
 
-import lab10.second.Export;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

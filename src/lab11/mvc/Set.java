@@ -6,13 +6,13 @@ import lab11.iterator.SetIterator;
 import lab11.visitor.Element;
 import lab11.visitor.Visitor;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Set<T> implements IterableSet<T>, Element {
     private final List<T> data;
+
     public static <T> Set<T> create() {
         return new Set<>();
     }
@@ -72,13 +72,13 @@ public class Set<T> implements IterableSet<T>, Element {
                 '}';
     }
 
-    public ListModel<T> getListModel() {
-        DefaultListModel<T> model = new DefaultListModel<>();
-        for (T element : data) {
-            model.addElement(element);
-        }
-        return model;
-    }
+//    public ListModel<T> getListModel() {
+//        DefaultListModel<T> model = new DefaultListModel<>();
+//        for (T element : data) {
+//            model.addElement(element);
+//        }
+//        return model;
+//    }
 
     public boolean add(T element) {
         if (!data.contains(element)) {

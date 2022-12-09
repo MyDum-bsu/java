@@ -1,39 +1,48 @@
 package lab11;
 
 import gui.AbstractApplication;
-import lab10.second.Export;
+import lab11.mvc.Controller;
 import lab11.mvc.Set;
-import lab11.visitor.SizeVisitor;
+import lab11.mvc.View;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Application extends AbstractApplication {
-    private JList<Export> leftList;
-    private JList<Export> rightList;
-    private JList<Export> resultList;
+    private View<Export> leftView;
+    private View<Export> rightView;
+    private View<Export> resultView;
+    private Controller controller;
     private Set<Export> leftSet;
     private Set<Export> rightSet;
     private Set<Export> resultSet;
-
-    private SizeVisitor sizeVisitor;
 
     public static Application create() {
         return new Application();
     }
 
     private Application() {
-        super("Lab 9", 1700, 500);
+        super("Lab 11", 1700, 500);
         setLayout(new GridLayout(0, 1));
+        initMVC();
         initListsPanel();
         initGeneralButtons();
-        initDefaultSet();
         setVisible(true);
     }
 
+    private void initMVC() {
+        initDefaultSet();
+        leftView = new View<>(leftSet);
+        rightView = new View<>(rightSet);
+        resultView = new View<>(resultSet);
+        controller = new Controller(leftSet, rightSet, resultSet, leftView, rightView, resultView);
+
+    }
+
     private void initDefaultSet() {
+        leftSet = Set.create();
+        rightSet = Set.create();
+        resultSet = Set.create();
         leftSet.add(new Export("teapot", "Belarus", 200));
         leftSet.add(new Export("teapot", "Russia", 300));
         leftSet.add(new Export("laptop", "Russia", 3000));
@@ -43,9 +52,6 @@ public class Application extends AbstractApplication {
         rightSet.add(new Export("books", "Belarus", 5678));
         rightSet.add(new Export("laptop", "Serbia", 123));
         rightSet.add(new Export("laptop", "Belarus", 321));
-
-        leftList.setModel(leftSet.getListModel());
-        rightList.setModel(rightSet.getListModel());
 
     }
 
@@ -63,118 +69,80 @@ public class Application extends AbstractApplication {
 
     private void initEqualButton(JPanel panel) {
         JButton button = new JButton("equals");
-        button.addActionListener(actionEvent -> {
-            String s = leftSet.equals(rightSet) ? "The sets are equals" : "The sets are different";
-            JOptionPane.showMessageDialog(this, s, "EQUALS", JOptionPane.INFORMATION_MESSAGE);
-        });
+        button.addActionListener(actionEvent -> controller.equals(this));
         panel.add(button);
     }
 
     private void initRightMove(JPanel panel) {
         JButton button = new JButton(">>");
-        button.addActionListener(actionEvent -> {
-            rightSet.addAll(leftSet);
-            rightList.setModel(rightSet.getListModel());
-        });
+        button.addActionListener(actionEvent -> controller.moveRight());
         panel.add(button);
     }
 
     private void initLeftMove(JPanel panel) {
         JButton button = new JButton("<<");
-        button.addActionListener(actionEvent -> {
-            leftSet.addAll(rightSet);
-            leftList.setModel(leftSet.getListModel());
-        });
+        button.addActionListener(actionEvent -> controller.moveLeft());
         panel.add(button);
     }
 
     private void initDifferenceButton(JPanel panel) {
         JButton button = new JButton("difference");
-        button.addActionListener(actionEvent -> {
-            resultSet.clear();
-            resultSet.addAll(leftSet.difference(rightSet));
-            resultList.setModel(resultSet.getListModel());
-        });
+        button.addActionListener(actionEvent -> controller.difference());
         panel.add(button);
     }
 
     private void initIntersectionButton(JPanel panel) {
         JButton button = new JButton("intersection");
-        button.addActionListener(actionEvent -> {
-            resultSet.clear();
-            resultSet.addAll(leftSet.intersection(rightSet));
-            resultList.setModel(resultSet.getListModel());
-        });
+        button.addActionListener(actionEvent -> controller.intersection());
         panel.add(button);
     }
 
     private void initUnionButton(JPanel panel) {
         JButton button = new JButton("union");
-        button.addActionListener(actionEvent -> {
-            resultSet.clear();
-            resultSet.addAll(leftSet.union(rightSet));
-            resultList.setModel(resultSet.getListModel());
-        });
+        button.addActionListener(actionEvent -> controller.union());
         panel.add(button);
     }
 
     private void initListsPanel() {
         JPanel panel = new JPanel(new GridLayout(1, 0));
         panel.setBackground(Color.BLACK);
-        initLeftPanel(panel);
-        initRightPanel(panel);
-        initResultPanel(panel);
+        initPanel(leftSet, leftView, panel);
+        initPanel(rightSet, rightView, panel);
+        initPanel(resultSet, resultView, panel);
         add(panel);
     }
 
-    private void initLeftPanel(JPanel panel) {
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        leftPanel.setBackground(Color.BLACK);
+    private void initPanel(Set<Export> set, View<Export> view, JPanel panel) {
+        JPanel listPanel = new JPanel(new GridBagLayout());
+        listPanel.setBackground(Color.BLACK);
         GridBagConstraints c = new GridBagConstraints();
-        leftSet = Set.create();
-        leftList = new JList<>(leftSet.getListModel());
-        initAddButton(leftList, leftSet, leftPanel, c);
-        initRemoveButton(leftList, leftSet, leftPanel, c);
-        initClearButton(leftList, leftSet, leftPanel, c);
-        initSizeButton(leftSet, leftPanel);
-        leftList.setBackground(Color.BLACK);
-        leftList.setForeground(Color.CYAN);
-        initList(leftList, leftPanel, c);
-        panel.add(leftPanel);
+
+        JList<Export> list = new JList<>(view.getListModel());
+        initAddButton(set, view, listPanel, c);
+
+        initRemoveButton(list, set, view, listPanel, c);
+        initClearButton(set, view, listPanel, c);
+        initSizeButton(set, listPanel);
+        list.setBackground(Color.BLACK);
+        list.setForeground(Color.CYAN);
+        initList(list, listPanel, c);
+        panel.add(listPanel);
     }
 
-    private void initRightPanel(JPanel panel) {
-        JPanel rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setBackground(Color.BLACK);
-        GridBagConstraints c = new GridBagConstraints();
-        rightSet = Set.create();
-        rightList = new JList<>(rightSet.getListModel());
-        rightList.setBackground(Color.BLACK);
-        rightList.setForeground(Color.CYAN);
-        initAddButton(rightList, rightSet, rightPanel, c);
-        initRemoveButton(rightList, rightSet, rightPanel, c);
-        initClearButton(rightList, rightSet, rightPanel, c);
-        initSizeButton(rightSet, rightPanel);
-        initList(rightList, rightPanel, c);
-        panel.add(rightPanel);
+    private void initAddButton(Set<Export> set, View<Export> view, JPanel panel, GridBagConstraints c) {
+        JButton addButton = new JButton("add");
+        addButton.addActionListener(actionEvent -> {
+            Export export = new Export();
+            new AddExportDialog(this, export);
+            if (!export.equals(new Export())) {
+                controller.add(view, set, export);
+            }
+        });
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(addButton);
     }
-
-    private void initResultPanel(JPanel panel) {
-        JPanel resultPanel = new JPanel(new GridBagLayout());
-        resultPanel.setBackground(Color.BLACK);
-        GridBagConstraints c = new GridBagConstraints();
-        resultSet = Set.create();
-        resultList = new JList<>(resultSet.getListModel());
-        resultList.setBackground(Color.BLACK);
-        resultList.setForeground(Color.CYAN);
-        initAddButton(resultList, resultSet, resultPanel, c);
-        initRemoveButton(resultList, resultSet, resultPanel, c);
-        initClearButton(resultList, resultSet, resultPanel, c);
-        initSizeButton(resultSet, resultPanel);
-        initList(resultList, resultPanel, c);
-        panel.add(resultPanel);
-    }
-
     private void initList(JList<Export> list, JPanel panel, GridBagConstraints c) {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.0;
@@ -184,50 +152,18 @@ public class Application extends AbstractApplication {
         panel.add(list, c);
     }
 
-    private void initAddButton(JList<Export> list, Set<Export> set, JPanel panel, GridBagConstraints c) {
-        JButton addButton = new JButton("add");
-        addButton.addActionListener(actionEvent -> {
-            Export export = new Export();
-            new AddExportDialog(this, export);
-            if (!export.equals(new Export())) {
-                set.add(export);
-            }
-            list.setModel(set.getListModel());
-        });
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        panel.add(addButton);
-    }
-
-    private void initRemoveButton(JList<Export> list, Set<Export> set, JPanel panel, GridBagConstraints c) {
+    private void initRemoveButton(JList<Export> list, Set<Export> set, View<Export> view, JPanel panel, GridBagConstraints c) {
         JButton removeButton = new JButton("remove");
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                removeFromList();
-                list.setModel(set.getListModel());
-            }
-
-            private void removeFromList() {
-                int[] ints = list.getSelectedIndices();
-                for (int i = 0; i < ints.length; i++) {
-                    set.remove(set.get(i));
-                }
-            }
-        });
+        removeButton.addActionListener(actionEvent -> controller.remove(view, set, list));
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
         panel.add(removeButton, c);
     }
 
-    private void initClearButton(JList<Export> list, Set<Export> set, JPanel panel, GridBagConstraints c) {
+    private void initClearButton(Set<Export> set, View<Export> view, JPanel panel, GridBagConstraints c) {
         JButton clearButton = new JButton("clear");
-        clearButton.addActionListener(actionEvent -> {
-            set.clear();
-            list.setModel(set.getListModel());
-        });
+        clearButton.addActionListener(actionEvent -> controller.clear(view, set));
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 0;
@@ -235,16 +171,8 @@ public class Application extends AbstractApplication {
     }
 
     private void initSizeButton(Set<Export> set, JPanel panel) {
-        sizeVisitor = new SizeVisitor();
-        sizeVisitor.visit(set);
         JButton sizeButton = new JButton("size");
-        sizeButton.addActionListener(actionEvent -> {
-            String s = "Set contains " + sizeVisitor.getSize() + " element";
-            if (sizeVisitor.getSize() != 1) {
-                s += "s";
-            }
-            JOptionPane.showMessageDialog(this, s, "SIZE", JOptionPane.INFORMATION_MESSAGE);
-        });
+        sizeButton.addActionListener(actionEvent -> controller.size(this, set));
         panel.add(sizeButton);
     }
 }

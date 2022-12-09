@@ -45,6 +45,7 @@ public class App extends JFrame {
         addLabel("pop: ", panel);
         panel.add(poppedText);
         JPanel jPanel = new JPanel();
+        jPanel.setBackground(Color.BLACK);
         jPanel.add(sizeLabel);
         add(panel);
         add(jPanel);

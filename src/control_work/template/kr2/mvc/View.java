@@ -19,9 +19,9 @@ public class View<T> {
     public View(Stack<T> model) {
         this.model = model;
         listModel = new DefaultListModel<>();
+        initStrategy();
         initPoppedText();
         initSizeLabel();
-        initStrategy();
     }
 
     private void initStrategy() {
@@ -30,9 +30,9 @@ public class View<T> {
     }
 
     private void initSizeLabel() {
-        sizeLabel = new JLabel();
+        sizeLabel = new JLabel("size: iterator - " + iteratorStrategy.countSize(model) + " visitor - " + visitorStrategy.countSize(model));
         sizeLabel.setForeground(Color.ORANGE);
-        sizeLabel.setFont(new Font("Courier", Font.PLAIN, 90));
+        sizeLabel.setFont(new Font("Courier", Font.PLAIN, 30));
     }
 
     private void initPoppedText() {
