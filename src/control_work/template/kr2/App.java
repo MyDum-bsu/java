@@ -3,9 +3,6 @@ package control_work.template.kr2;
 import control_work.template.kr2.mvc.Controller;
 import control_work.template.kr2.mvc.Stack;
 import control_work.template.kr2.mvc.View;
-import control_work.template.kr2.strategy.IteratorStrategy;
-import control_work.template.kr2.strategy.Strategy;
-import control_work.template.kr2.strategy.VisitorStrategy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,18 +12,12 @@ public class App extends JFrame {
         new App();
     }
 
-    private Stack<String> model;
     private View<String> view;
-    private Controller<String> controller;
+    private Controller controller;
     private JButton pop;
     private JButton push;
 
-    private JLabel poppedText;
     private JTextField textToPush;
-    private Strategy iteratorStrategy;
-    private Strategy visitorStrategy;
-    private JLabel sizeLabel;
-    private final Font font = new Font("Courier", Font.PLAIN, 90);
 
     App() {
         defaultSetInit(1000, 500);
@@ -36,20 +27,7 @@ public class App extends JFrame {
         initButtons();
         initLabels();
         addAction();
-        addStrategy();
         setVisible(true);
-    }
-
-    private void addStrategy() {
-        iteratorStrategy = new IteratorStrategy();
-        visitorStrategy = new VisitorStrategy();
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.BLACK);
-        sizeLabel = new JLabel("size: ");
-        sizeLabel.setForeground(Color.ORANGE);
-        sizeLabel.setFont(font);
-        panel.add(sizeLabel);
-        add(panel);
     }
 
     private void initLabels() {
@@ -60,15 +38,16 @@ public class App extends JFrame {
         textToPush.setForeground(Color.CYAN);
         textToPush.setFont(new Font("Courier", Font.PLAIN, 45));
 
-        poppedText = new JLabel();
-        poppedText.setBackground(Color.BLACK);
-        poppedText.setForeground(Color.GREEN);
-        poppedText.setFont(new Font("Courier", Font.PLAIN, 45));
+        JLabel poppedText = view.getPoppedTextLabel();
+        JLabel sizeLabel = view.getSizeLabel();
         addLabel("push: ", panel);
         panel.add(textToPush);
         addLabel("pop: ", panel);
         panel.add(poppedText);
+        JPanel jPanel = new JPanel();
+        jPanel.add(sizeLabel);
         add(panel);
+        add(jPanel);
     }
 
     private void addLabel(String text, JPanel panel) {
@@ -87,30 +66,23 @@ public class App extends JFrame {
     }
 
     private void initMVC() {
-        model = Stack.create();
+        Stack<String> model = Stack.create();
         view = new View<>(model);
-        controller = new Controller<>(model, view);
+        controller = new Controller(model, view);
     }
 
     private void addAction() {
         pop.addActionListener(actionEvent -> {
             try {
-                String text = controller.pop();
-                setTextToLabel(poppedText, text);
-                setTextToLabel(sizeLabel, "size: " + iteratorStrategy.countSize(model) + " -- " + visitorStrategy.countSize(model));
+                controller.pop();
             } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         });
         push.addActionListener(actionEvent -> {
             if (!textToPush.getText().isEmpty()) {
                 controller.push(textToPush.getText());
-                setTextToLabel(sizeLabel, "size: " + iteratorStrategy.countSize(model) + " -- " + visitorStrategy.countSize(model));
             }
         });
-    }
-
-    private void setTextToLabel(JLabel sizeLabel, String text) {
-        sizeLabel.setText(text);
     }
 
     private void initButtons() {

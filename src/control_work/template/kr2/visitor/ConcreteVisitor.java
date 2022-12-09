@@ -12,9 +12,9 @@ public class ConcreteVisitor implements Visitor {
 
     @Override
     public <T> void visitMyCollection(Stack<T> e) {
-        Iterator iterator = e.createIterator();
+        Iterator<T> iterator = e.createIterator();
         iterator.first();
-        while(!iterator.isDone()) {
+        while (!iterator.isDone()) {
             iterator.next();
             count++;
         }

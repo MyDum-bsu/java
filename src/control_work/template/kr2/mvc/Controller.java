@@ -1,20 +1,22 @@
 package control_work.template.kr2.mvc;
 
-public class Controller<T> {
-    private final Stack<T> model;
-    private final View<T> view;
-    public Controller(Stack<T> model, View<T> view) {
+public class Controller {
+    private final Stack<String> model;
+    private final View<String> view;
+
+    public Controller(Stack<String> model, View<String> view) {
         this.model = model;
         this.view = view;
     }
 
-    public void push(T element) {
+    public void push(String element) {
         model.push(element);
         view.repaint();
     }
-    public T pop() {
-        T element = model.pop();
+
+    public void pop() {
+        String element = model.pop();
+        view.setPoppedText(element);
         view.repaint();
-        return element;
     }
 }

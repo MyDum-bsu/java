@@ -10,7 +10,7 @@ public class IteratorStrategy implements Strategy {
         Iterator<T> iterator = element.createIterator();
         iterator.first();
         int size = 0;
-        while(!iterator.isDone()) {
+        while (!iterator.isDone()) {
             iterator.next();
             size++;
         }

@@ -86,6 +86,5 @@ public class AddExportDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, err, "ERROR", JOptionPane.PLAIN_MESSAGE);
             }
         }
-
     }
 }
