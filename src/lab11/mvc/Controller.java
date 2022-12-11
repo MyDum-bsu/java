@@ -51,8 +51,8 @@ public class Controller {
         set.add(export);
         view.repaintList();
     }
-    public void remove(View<Export> view, Set<Export> set, JList<Export> list) {
-        int[] ints = list.getSelectedIndices();
+    public void remove(View<Export> view, Set<Export> set) {
+        int[] ints = view.getList().getSelectedIndices();
         for (int i = 0; i < ints.length; i++) {
             set.remove(set.get(i));
         }
@@ -70,7 +70,7 @@ public class Controller {
 
     public void size(JFrame frame, Set<Export> set) {
         SizeVisitor sizeVisitor = new SizeVisitor();
-        sizeVisitor.visit(set);
+        set.accept(sizeVisitor);
         String s = "Set contains " + sizeVisitor.getSize() + " element";
         if (sizeVisitor.getSize() != 1) {
             s += "s";

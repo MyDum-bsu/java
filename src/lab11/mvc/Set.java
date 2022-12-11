@@ -17,10 +17,6 @@ public class Set<T> implements IterableSet<T>, Element {
         return new Set<>();
     }
 
-    public static <T> Set<T> copy(Set<T> set) {
-        return new Set<>(set);
-    }
-
     private Set(Set<T> set) {
         data = new ArrayList<>();
         data.addAll(set.data);
@@ -38,10 +34,6 @@ public class Set<T> implements IterableSet<T>, Element {
     public int size() {
         return data.size();
     }
-
-//    public boolean isEmpty() {
-//        return data.isEmpty();
-//    }
 
     public void clear() {
         data.clear();
@@ -71,14 +63,6 @@ public class Set<T> implements IterableSet<T>, Element {
                 "data=" + data +
                 '}';
     }
-
-//    public ListModel<T> getListModel() {
-//        DefaultListModel<T> model = new DefaultListModel<>();
-//        for (T element : data) {
-//            model.addElement(element);
-//        }
-//        return model;
-//    }
 
     public boolean add(T element) {
         if (!data.contains(element)) {

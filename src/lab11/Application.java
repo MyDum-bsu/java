@@ -117,15 +117,15 @@ public class Application extends AbstractApplication {
         listPanel.setBackground(Color.BLACK);
         GridBagConstraints c = new GridBagConstraints();
 
-        JList<Export> list = new JList<>(view.getListModel());
+        JList<Export> list = view.getList();
         initAddButton(set, view, listPanel, c);
 
-        initRemoveButton(list, set, view, listPanel, c);
+        initRemoveButton(set, view, listPanel, c);
         initClearButton(set, view, listPanel, c);
         initSizeButton(set, listPanel);
         list.setBackground(Color.BLACK);
         list.setForeground(Color.CYAN);
-        initList(list, listPanel, c);
+        addList(list, listPanel, c);
         panel.add(listPanel);
     }
 
@@ -143,7 +143,8 @@ public class Application extends AbstractApplication {
         c.gridy = 0;
         panel.add(addButton);
     }
-    private void initList(JList<Export> list, JPanel panel, GridBagConstraints c) {
+
+    private void addList(JList<Export> list, JPanel panel, GridBagConstraints c) {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.0;
         c.gridwidth = 3;
@@ -152,9 +153,9 @@ public class Application extends AbstractApplication {
         panel.add(list, c);
     }
 
-    private void initRemoveButton(JList<Export> list, Set<Export> set, View<Export> view, JPanel panel, GridBagConstraints c) {
+    private void initRemoveButton(Set<Export> set, View<Export> view, JPanel panel, GridBagConstraints c) {
         JButton removeButton = new JButton("remove");
-        removeButton.addActionListener(actionEvent -> controller.remove(view, set, list));
+        removeButton.addActionListener(actionEvent -> controller.remove(view, set));
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;

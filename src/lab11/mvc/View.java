@@ -5,16 +5,17 @@ import lab11.iterator.Iterator;
 import javax.swing.*;
 
 public class View<T> {
-
-    public DefaultListModel<T> getListModel() {
-        return listModel;
-    }
-
     private final DefaultListModel<T> listModel;
     private final Set<T> model;
+    private final JList<T> list;
+
+    public JList<T> getList() {
+        return list;
+    }
 
     public View(Set<T> model) {
         listModel = new DefaultListModel<>();
+        list = new JList<>(listModel);
         this.model = model;
         repaintList();
     }
