@@ -1,11 +1,17 @@
-package lab12.lab10_2;
+package lab12.app;
 
 import gui.AbstractApplication;
+import lab12.DOMExportParser;
+import lab12.strategy.FilterByNameStrategyWithLoop;
+import lab12.strategy.FilterByNameStrategyWithStream;
+import lab12.strategy.FilterExportByNameStrategy;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +25,8 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Application extends AbstractApplication implements ActionListener {
-    protected JMenuItem menuItem;
+    protected JMenuItem SAXMenuItem;
+    protected JMenuItem DOMMenuItem;
     protected JButton edit;
     protected JButton add;
     protected JButton delete;
@@ -124,11 +131,12 @@ public class Application extends AbstractApplication implements ActionListener {
         JMenu menu = new JMenu("File");
         menu.setForeground(Color.CYAN);
         menu.setBackground(Color.BLACK);
-        menuItem = new JMenuItem("Open");
-        menuItem.setBackground(Color.BLACK);
-
-        menuItem.addActionListener(this);
-        menu.add(menuItem);
+        SAXMenuItem = new JMenuItem("SAX");
+        DOMMenuItem = new JMenuItem("DOM");
+        SAXMenuItem.addActionListener(this);
+        DOMMenuItem.addActionListener(this);
+        menu.add(SAXMenuItem);
+        menu.add(DOMMenuItem);
         menuBar.add(menu);
         setJMenuBar(menuBar);
     }
@@ -179,10 +187,14 @@ public class Application extends AbstractApplication implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(menuItem)) {
+        if (actionEvent.getSource().equals(SAXMenuItem)) {
             collection.clear();
-            fileChooserInit();
-        } else if (actionEvent.getSource().equals(add)) {
+            SAXParse(getPathFromFileChooser());
+        } else if (actionEvent.getSource().equals(DOMMenuItem)) {
+            collection.clear();
+            DOMParse(getPathFromFileChooser());
+        }
+        else if (actionEvent.getSource().equals(add)) {
             Export export = new Export();
             new AddExportDialog(this, export);
             if (!export.equals(new Export())) {
@@ -202,6 +214,19 @@ public class Application extends AbstractApplication implements ActionListener {
         showDataFromCollection();
         showDataFromFilteredCollection(sStrategy, sortedWithStreamList, sMap, totalStreamQuantity);
         showDataFromFilteredCollection(lStrategy, sortedWithLoopList, lMap, totalLoopQuantity);
+    }
+
+    private void DOMParse(Path path) {
+        try {
+            DOMExportParser parser = DOMExportParser.newInstance(path);
+            collection.addAll(parser.getExportList());
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void SAXParse(Path path) {
+
     }
 
     private void showDataFromCollection() {
@@ -232,16 +257,16 @@ public class Application extends AbstractApplication implements ActionListener {
         }
     }
 
-    protected void fileChooserInit() {
+    private Path getPathFromFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("xml", "xml");
         fileChooser.setFileFilter(filter);
         File workingDirectory = new File(System.getProperty("user.dir"));
         fileChooser.setCurrentDirectory(workingDirectory);
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            Path path = fileChooser.getSelectedFile().toPath();
-            parseData(readDataFromFile(path));
+            return fileChooser.getSelectedFile().toPath();
         }
+        return null;
     }
 
     private ArrayList<String> readDataFromFile(Path path) {
@@ -253,7 +278,7 @@ public class Application extends AbstractApplication implements ActionListener {
         return new ArrayList<>();
     }
 
-    protected void parseData(ArrayList<String> lines) {
+    private void parseData(ArrayList<String> lines) {
         String name;
         String country;
         int quantity;

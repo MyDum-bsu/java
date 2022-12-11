@@ -1,4 +1,6 @@
-package lab12.lab10_2;
+package lab12.strategy;
+
+import lab12.app.Export;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
