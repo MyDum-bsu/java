@@ -1,7 +1,9 @@
 package lab12.app;
 
 import gui.AbstractApplication;
-import lab12.DOMExportParser;
+import lab12.xml.DOMExportParser;
+import lab12.xml.SAXExportParser;
+import lab12.xml.XMLCreator;
 import lab12.strategy.FilterByNameStrategyWithLoop;
 import lab12.strategy.FilterByNameStrategyWithStream;
 import lab12.strategy.FilterExportByNameStrategy;
@@ -12,31 +14,32 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Application extends AbstractApplication implements ActionListener {
-    protected JMenuItem SAXMenuItem;
-    protected JMenuItem DOMMenuItem;
-    protected JButton edit;
-    protected JButton add;
-    protected JButton delete;
+    private JMenuItem menuItemSAX;
+    private JMenuItem menuItemDOM;
+    private JMenuItem save;
+    private JMenu open;
+
+    private JButton edit;
+    private JButton add;
+    private JButton delete;
     private List list;
     private List sortedWithStreamList;
     private List sortedWithLoopList;
 
-    protected JTextField nameFilter;
-    protected JLabel totalStreamQuantity;
-    protected JLabel totalLoopQuantity;
+    private JTextField nameFilter;
+    private JLabel totalStreamQuantity;
+    private JLabel totalLoopQuantity;
 
     private java.util.List<Export> collection;
     private TreeMap<String, Integer> sMap;
@@ -50,14 +53,34 @@ public class Application extends AbstractApplication implements ActionListener {
     }
 
     private Application() {
-        super("Lab 10", 1500, 300);
+        super("Lab 12", 1900, 400);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         initStrategy();
         menuBarInit();
         addNameFilter();
         listsInit();
         buttonsInit();
+        changeFont(this, new Font("Courier", Font.PLAIN, 18));
+        changeBackground(this, Color.BLACK);
         setVisible(true);
+    }
+
+    private void changeFont(Component component, Font font) {
+        component.setFont(font);
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                changeFont(child, font);
+            }
+        }
+    }
+
+    private void changeBackground(Component component, Color color) {
+        component.setBackground(color);
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                changeBackground(child, color);
+            }
+        }
     }
 
     private void initStrategy() {
@@ -79,11 +102,9 @@ public class Application extends AbstractApplication implements ActionListener {
         totalStreamQuantity = initTotalQuantityLabel();
 
         JPanel filterPanel = new JPanel();
-        filterPanel.setBackground(Color.BLACK);
         filterPanel.add(nameLabel);
         filterPanel.add(nameFilter);
         JPanel totalQuantityPanel = new JPanel();
-        totalQuantityPanel.setBackground(Color.BLACK);
         totalQuantityPanel.add(totalLabel);
         totalQuantityPanel.add(totalStreamQuantity);
         totalQuantityPanel.add(totalLoopQuantity);
@@ -95,14 +116,12 @@ public class Application extends AbstractApplication implements ActionListener {
 
     private JLabel initTotalQuantityLabel() {
         JLabel label = new JLabel("0");
-        label.setBackground(Color.BLACK);
         label.setForeground(Color.YELLOW);
         return label;
     }
 
     private void nameFilterInit() {
         nameFilter = new JTextField(15);
-        nameFilter.setBackground(Color.BLACK);
         nameFilter.setForeground(Color.GREEN);
         nameFilter.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -127,18 +146,25 @@ public class Application extends AbstractApplication implements ActionListener {
 
     private void menuBarInit() {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.BLACK);
         JMenu menu = new JMenu("File");
         menu.setForeground(Color.CYAN);
-        menu.setBackground(Color.BLACK);
-        SAXMenuItem = new JMenuItem("SAX");
-        DOMMenuItem = new JMenuItem("DOM");
-        SAXMenuItem.addActionListener(this);
-        DOMMenuItem.addActionListener(this);
-        menu.add(SAXMenuItem);
-        menu.add(DOMMenuItem);
+        openMenuInit();
+        save = new JMenuItem("save");
+        save.addActionListener(this);
+        menu.add(save);
+        menu.add(open);
         menuBar.add(menu);
         setJMenuBar(menuBar);
+    }
+
+    private void openMenuInit() {
+        open = new JMenu("open with");
+        menuItemSAX = new JMenuItem("SAX");
+        menuItemDOM = new JMenuItem("DOM");
+        menuItemDOM.addActionListener(this);
+        menuItemSAX.addActionListener(this);
+        open.add(menuItemDOM);
+        open.add(menuItemSAX);
     }
 
     protected void listsInit() {
@@ -147,13 +173,10 @@ public class Application extends AbstractApplication implements ActionListener {
         lMap = new TreeMap<>();
         list = new List();
         sortedWithStreamList = new List();
-        list.setBackground(Color.BLACK);
-        sortedWithStreamList.setBackground(Color.BLACK);
         list.setForeground(Color.WHITE);
         sortedWithStreamList.setForeground(Color.WHITE);
 
         sortedWithLoopList = new List();
-        sortedWithLoopList.setBackground(Color.BLACK);
         sortedWithLoopList.setForeground(Color.WHITE);
 
         Box box = new Box(2);
@@ -178,8 +201,6 @@ public class Application extends AbstractApplication implements ActionListener {
     private void addButtonToBox(JButton button, Box box) {
         button.addActionListener(this);
         JPanel panel = new JPanel();
-        panel.setBackground(Color.BLACK);
-        button.setBackground(Color.BLACK);
         button.setForeground(Color.ORANGE);
         panel.add(button);
         box.add(panel);
@@ -187,14 +208,27 @@ public class Application extends AbstractApplication implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource().equals(SAXMenuItem)) {
+        if (actionEvent.getSource().equals(menuItemSAX)) {
+            Path path = getPathFromFileChooser();
             collection.clear();
-            SAXParse(getPathFromFileChooser());
-        } else if (actionEvent.getSource().equals(DOMMenuItem)) {
+            saxParse(path);
+        } else if (actionEvent.getSource().equals(menuItemDOM)) {
+            Path path = getPathFromFileChooser();
             collection.clear();
-            DOMParse(getPathFromFileChooser());
-        }
-        else if (actionEvent.getSource().equals(add)) {
+            domParse(path);
+        } else if (actionEvent.getSource().equals(save)) {
+            try {
+                XMLCreator creator = XMLCreator.create();
+                creator.parseList(collection);
+                Path path = getPathFromFileChooser();
+                if (path == null) {
+                    return;
+                }
+                creator.transformation(path);
+            } catch (ParserConfigurationException | TransformerException e) {
+                JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (actionEvent.getSource().equals(add)) {
             Export export = new Export();
             new AddExportDialog(this, export);
             if (!export.equals(new Export())) {
@@ -216,17 +250,22 @@ public class Application extends AbstractApplication implements ActionListener {
         showDataFromFilteredCollection(lStrategy, sortedWithLoopList, lMap, totalLoopQuantity);
     }
 
-    private void DOMParse(Path path) {
+    private void domParse(Path path) {
         try {
             DOMExportParser parser = DOMExportParser.newInstance(path);
-            collection.addAll(parser.getExportList());
+            collection.addAll(parser.parse());
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            throw new RuntimeException(e);
+            JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void SAXParse(Path path) {
-
+    private void saxParse(Path path){
+        try {
+            SAXExportParser parser = SAXExportParser.newInstance(path);
+            collection.addAll(parser.getExportList());
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            JOptionPane.showMessageDialog(this, e.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void showDataFromCollection() {
@@ -267,34 +306,5 @@ public class Application extends AbstractApplication implements ActionListener {
             return fileChooser.getSelectedFile().toPath();
         }
         return null;
-    }
-
-    private ArrayList<String> readDataFromFile(Path path) {
-        try {
-            return (ArrayList<String>) Files.readAllLines(path);
-        } catch (IOException exception) {
-            JOptionPane.showMessageDialog(this, exception.getLocalizedMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-        return new ArrayList<>();
-    }
-
-    private void parseData(ArrayList<String> lines) {
-        String name;
-        String country;
-        int quantity;
-        for (String line : lines) {
-            try (Scanner scanner = new Scanner(line)) {
-                name = scanner.next();
-                country = scanner.next();
-                quantity = scanner.nextInt();
-                if (scanner.hasNext()) {
-                    JOptionPane.showMessageDialog(this, "wrong data", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                collection.add(new Export(name, country, quantity));
-            } catch (InputMismatchException exception) {
-                JOptionPane.showMessageDialog(this, "wrong data", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
     }
 }

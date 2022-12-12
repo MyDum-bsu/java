@@ -1,4 +1,4 @@
-package lab12;
+package lab12.xml;
 
 import lab12.app.Export;
 import org.w3c.dom.*;
@@ -14,6 +14,7 @@ import java.util.List;
 
 public class DOMExportParser {
     private final List<Export> exportList;
+    private final NodeList exportNodeList;
 
     public static DOMExportParser newInstance(Path path) throws ParserConfigurationException, IOException, SAXException {
         return new DOMExportParser(path);
@@ -25,17 +26,34 @@ public class DOMExportParser {
         DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(path.toFile());
         document.getDocumentElement().normalize();
-        NodeList exportNodeList = document.getElementsByTagName("Export");
-        parseExportNodeList(exportNodeList);
+        exportNodeList = document.getElementsByTagName("Export");
     }
 
-    private void parseExportNodeList(NodeList exportNodeList) throws ParserConfigurationException {
+    public List<Export> parse() throws ParserConfigurationException {
+        parseExportNodeList();
+        return exportList;
+    }
+    private void parseExportNodeList() throws ParserConfigurationException {
         for (int i = 0; i < exportNodeList.getLength(); i++) {
             Node exportNode = exportNodeList.item(i);
             Export export = parseExportNode(exportNode);
             exportList.add(export);
         }
     }
+
+//    public void parseByName(String name) throws ParserConfigurationException {
+//        for (int i = 0; i < exportNodeList.getLength(); i++) {
+//            Node exportNode = exportNodeList.item(i);
+//            if (exportNode instanceof Element) {
+//                NodeList nameNodeList = ((Element) exportNode).getElementsByTagName("name");
+//                if (nameNodeList instanceof Element) {
+//                    if (((Element) nameNodeList).getTextContent().equals(name)) {
+//                        parseExportNode(exportNode);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     private Export parseExportNode(Node exportNode) throws ParserConfigurationException {
         if (exportNode instanceof Element) {
