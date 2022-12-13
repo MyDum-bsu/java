@@ -41,20 +41,6 @@ public class DOMExportParser {
         }
     }
 
-//    public void parseByName(String name) throws ParserConfigurationException {
-//        for (int i = 0; i < exportNodeList.getLength(); i++) {
-//            Node exportNode = exportNodeList.item(i);
-//            if (exportNode instanceof Element) {
-//                NodeList nameNodeList = ((Element) exportNode).getElementsByTagName("name");
-//                if (nameNodeList instanceof Element) {
-//                    if (((Element) nameNodeList).getTextContent().equals(name)) {
-//                        parseExportNode(exportNode);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     private Export parseExportNode(Node exportNode) throws ParserConfigurationException {
         if (exportNode instanceof Element) {
             Export export = new Export();
@@ -75,9 +61,5 @@ public class DOMExportParser {
             return export;
         }
         throw new ParserConfigurationException("wrong data");
-    }
-
-    public List<Export> getExportList() {
-        return exportList;
     }
 }
