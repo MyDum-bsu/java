@@ -1,4 +1,4 @@
-.button {
+.btn {
     background-color: green;
     color: white;
     padding: 16px;
@@ -37,4 +37,4 @@
 }
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .button {background-color: green;}
+.dropdown:hover .btn {background-color: green;}

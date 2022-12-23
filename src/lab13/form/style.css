@@ -13,7 +13,14 @@ table, th, td {
 }
 
 #submit-button {
-    background-color: white;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+    padding: 10px 20px;
+    border-radius: 15px;
+    transition: 200ms linear;
+}
+
+#cancel-button {
     border: 1px solid black;
     padding: 10px 20px;
     border-radius: 15px;
@@ -24,7 +31,11 @@ table, th, td {
     border-radius: 30px;
 }
 
-.button {
+#cancel-button:hover {
+    border-radius: 30px;
+}
+
+.btn {
     background-color: green;
     color: white;
     padding: 16px;
@@ -61,6 +72,4 @@ table, th, td {
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;
 }
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .button {background-color: green;}
+.dropdown:hover .btn {background-color: green;}

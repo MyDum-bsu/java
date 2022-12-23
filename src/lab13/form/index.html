@@ -5,22 +5,35 @@
     <link rel="stylesheet" href="style.css">
     <title>Students</title>
     <script>
+
         function submit() {
             const name = document.getElementById('name-input').value;
             const course = document.getElementById('course-input').value;
-            const sex = document.getElementById('sex-input').value;
+            const isMale = document.getElementById('male').checked;
             const isChecked = document.getElementById('checkbox').checked;
-            console.log({name, course, sex, isChecked});
+            console.log({name, course, sex: isMale, isChecked});
+            getPicture();
             alert('name: ' + name + '\n' +
                 'course: ' + course + '\n' +
-                'sex: ' + sex + '\n' +
+                'sex: ' + (isMale ? 'male' : 'female') + '\n' +
                 'Checkbox is checked: ' + (isChecked ? 'checked' : 'not checked'));
+        }
+
+        function cancel() {
+            document.getElementById('name-input').value = "";
+            document.getElementById('course-input').value = 1;
+            document.getElementById('male').checked = true;
+            document.getElementById('checkbox').checked = false;
+        }
+
+        function getPicture() {
+            document.getElementById('image').src = document.getElementById('docpicker').value;
         }
     </script>
 </head>
 <body>
 <div class="dropdown">
-    <button class="button">Dropdown</button>
+    <button class="btn">Dropdown</button>
     <div class="dropdown-content">
         <a href="../about-me/index.html">About me</a>
         <a href="../form/index.html">Form</a>
@@ -28,6 +41,7 @@
     </div>
 </div>
 <div id="content">
+    <image id="image"></image>
     <table>
         <tr>
             <th>Description</th>
@@ -35,36 +49,55 @@
         </tr>
         <tr>
             <td>Name</td>
-            <td><input type="text" id="name-input" placeholder="Name"/></td>
+            <td><label for="name-input"></label><input type="text" id="name-input" placeholder="Name"/></td>
         </tr>
         <tr>
             <td>Course</td>
             <td>
-                <select name="course" id="course-input">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
+                <label for="course-input"></label><select name="course" id="course-input">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
             </td>
         </tr>
         <tr>
             <td>Just a checkbox</td>
             <td>
-                <input type="checkbox" id='checkbox'/>
+                <label for='checkbox'></label><input type="checkbox" id='checkbox'/>
             </td>
         </tr>
         <tr>
             <td>Sex</td>
             <td>
-                <select name="sex" id="sex-input">
-                    <option value="male">male</option>
-                    <option value="female">female</option>
-                </select>
+                <div id="radio">
+                    <input type="radio" id="female"
+                           name="sex" value="female">
+                    <label for="female">female</label>
+
+                    <input type="radio" id="male"
+                           name="sex" value="male">
+                    <label for="male">male</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>file</td>
+            <td>
+                <input type="file" name="file" accept=".jpg, .jpeg, .png" id="docpicker">
             </td>
         </tr>
     </table>
-    <input type="button" id="submit-button" onclick="submit()" value="Submit"/>
+    <div>
+        <button type="submit" id="submit-button" onclick="submit()">
+            <image src="submit.png"></image>
+        </button>
+
+        <button type="reset" id="cancel-button" onclick="cancel()">
+            <image src="cancel.png"></image>
+        </button>
+    </div>
 </div>
 </body>
 </html>
