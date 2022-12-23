@@ -209,18 +209,24 @@ public class Application extends AbstractApplication implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(menuItemSAX)) {
-            Path path = getPathFromFileChooser();
+            Path path = getPathFromFileChooser("open");
+            if (path == null) {
+                return;
+            }
             collection.clear();
             saxParse(path);
         } else if (actionEvent.getSource().equals(menuItemDOM)) {
-            Path path = getPathFromFileChooser();
+            Path path = getPathFromFileChooser("open");
+            if (path == null) {
+                return;
+            }
             collection.clear();
             domParse(path);
         } else if (actionEvent.getSource().equals(save)) {
             try {
+                Path path = getPathFromFileChooser("save");
                 XMLCreator creator = XMLCreator.create();
                 creator.parseList(collection);
-                Path path = getPathFromFileChooser();
                 if (path == null) {
                     return;
                 }
@@ -296,13 +302,13 @@ public class Application extends AbstractApplication implements ActionListener {
         }
     }
 
-    private Path getPathFromFileChooser() {
+    private Path getPathFromFileChooser(String s) {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("xml", "xml");
         fileChooser.setFileFilter(filter);
         File workingDirectory = new File(System.getProperty("user.dir"));
         fileChooser.setCurrentDirectory(workingDirectory);
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (fileChooser.showDialog(this, s) == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile().toPath();
         }
         return null;
